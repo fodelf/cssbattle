@@ -1,0 +1,118 @@
+.pageHead {
+  height: 50px;
+  line-height: 50px;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #0f1117;
+  .content {
+    color: #fff;
+  }
+  .avator {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #0f1117;
+    i {
+      width: 25px;
+      height: 25px;
+      margin: 5px;
+      background: #0f1117 url('../../assets/imgs/avator.svg') no-repeat center;
+      background-size: cover;
+      display: inline-block;
+    }
+  }
+  .logoIndex {
+    height: 50px;
+    line-height: 50px;
+    width: 140px;
+    background: url('../../assets/imgs/logo.svg') no-repeat center;
+    display: inline-block;
+  }
+
+  :global {
+    .ant-dropdown-trigger {
+      background: #323f4a;
+      height: 35px;
+      line-height: 35px;
+      display: inline-block;
+      padding: 0 15px;
+      color: #fff;
+      font-size: 16px;
+      margin-right: 15px;
+      border-radius: 2px;
+      vertical-align: middle;
+      .anticon {
+        vertical-align: top !important;
+        margin-top: 14px;
+      }
+      span {
+        display: inline-block;
+        vertical-align: top;
+      }
+    }
+    .ant-breadcrumb {
+      span {
+        color: #fff;
+        line-height: 50px;
+      }
+    }
+  }
+  .loginBtn {
+    background: #323f4a;
+    border: 1px #323f4a solid;
+    height: 35px;
+    line-height: 35px;
+    font-size: 1.125rem;
+    color: #fff;
+    padding: 0 15px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .battleLearn {
+    color: rgb(244, 218, 49);
+    text-decoration: underline;
+    display: inline-block;
+    height: 35px;
+    line-height: 35px;
+    font-size: 1.125rem;
+    margin-right: 15px;
+    cursor: pointer;
+    padding: 0 15px;
+    position: relative;
+    z-index: 10;
+    border-radius: 2px;
+
+    &:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0;
+      z-index: -1;
+      height: 100%;
+      transition: 0.3s;
+      background: rgb(244, 218, 49);
+    }
+
+    &:hover:after {
+      width: 100%;
+    }
+    &:hover {
+      color: #0f1117;
+    }
+  }
+
+  @keyframes slideBg {
+    0% {
+      background-size: 0% 100%;
+    }
+    50% {
+      background-size: 50% 100%;
+    }
+    100% {
+      background-size: 100% 100%;
+    }
+  }
+}

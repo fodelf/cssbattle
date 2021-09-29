@@ -1,0 +1,56 @@
+* {
+  margin: 0;
+  padding:0;
+}
+*:focus {
+  outline-color: #4191ff;
+  outline-width: 5px;
+}
+html {
+  font-size: 1em;
+}
+body,
+html {
+  height: 100%;
+  font-family: 'IBM Plex Mono', 'Menlo', 'DejaVu Sans Mono', 'Lucida Console',
+    monospace;
+  -webkit-font-smoothing: antialiased;
+}
+.CodeMirror {
+  font-family: 'IBM Plex Mono', 'Menlo', 'DejaVu Sans Mono', 'Lucida Console',
+    monospace;
+  font-size:16px;
+  background-color: transparent !important;
+}
+.CodeMirror-gutters {
+  background-color: transparent !important;
+}
+.dropdownHead .ant-dropdown-menu {
+  background: #27313a;
+}  
+.dropdownHead .ant-dropdown-menu .ant-dropdown-menu-item:hover {
+  background: none;
+}
+.dropdownHead .ant-dropdown-menu .ant-dropdown-menu-title-content {
+  color: #fff;
+} 
+.dropdownHead .menuContent{
+  background: #27313a;
+  padding: 2rem;
+  width:600px;
+  color: #fff;
+}
+
+div::-webkit-scrollbar{
+  width: 12px;
+  height: 12px;
+  /**/
+}
+div::-webkit-scrollbar-track{
+  background: none;
+  border-radius:2px;
+}
+div::-webkit-scrollbar-thumb{
+  background: hsla(0,0%,100%,0.2);
+  border-radius:10px;
+}

@@ -1,0 +1,25 @@
+.DS_Store
+node_modules
+cssbattle-web/dist/*
+cssbattle-server/web/*
+cssbattle-server/pkg/oss/*
+cssbattle-server/tmp/*
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+.history
+
+# local env files
+.env.local
+.env.*.local

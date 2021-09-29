@@ -1,0 +1,286 @@
+definitions:
+  InterfaceEntity.BattleType:
+    properties:
+      des:
+        type: string
+      imgList:
+        items:
+          type: integer
+        type: array
+      type:
+        type: integer
+    type: object
+  InterfaceEntity.Score:
+    properties:
+      match:
+        example: 1
+        type: integer
+      score:
+        example: 100
+        type: integer
+    type: object
+  InterfaceEntity.UserImg:
+    properties:
+      chars:
+        type: integer
+      score:
+        type: integer
+      userIcon:
+        type: string
+      userName:
+        type: string
+    type: object
+  InterfaceEntity.UserInfo:
+    properties:
+      createTime:
+        type: string
+      modifyTime:
+        type: string
+      password:
+        type: string
+      score:
+        type: integer
+      target:
+        type: integer
+      userIcon:
+        type: string
+      userName:
+        type: string
+    type: object
+info:
+  contact: {}
+  license: {}
+paths:
+  /api/v1/img/UploadSvg:
+    post:
+      consumes:
+      - application/json
+      description: 图片上传oss
+      parameters:
+      - description: file
+        in: path
+        name: file
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: oss上传
+      tags:
+      - 图片模块
+  /api/v1/img/addImg:
+    post:
+      consumes:
+      - application/json
+      description: 添加图片数据
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 添加图片
+      tags:
+      - 图片模块
+  /api/v1/img/getCssbattleTypeList:
+    get:
+      consumes:
+      - application/json
+      description: cssbattle类型列表详情
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/InterfaceEntity.BattleType'
+      summary: cssbattle类型列表
+      tags:
+      - 图片模块
+  /api/v1/img/getImgDetail:
+    get:
+      consumes:
+      - application/json
+      description: 根据图片id获取图片详情
+      parameters:
+      - description: id
+        in: path
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 图片详细
+      tags:
+      - 图片模块
+  /api/v1/img/getImgList:
+    get:
+      consumes:
+      - application/json
+      description: 根据资源类型获取图片详情列表
+      parameters:
+      - description: type
+        in: path
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 图片列表
+      tags:
+      - 图片模块
+  /api/v1/img/imgCompare:
+    post:
+      consumes:
+      - application/json
+      description: 上传代码以及图片id获取得分
+      parameters:
+      - description: code
+        in: path
+        name: code
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/InterfaceEntity.Score'
+      summary: 图片比较得分
+      tags:
+      - 图片模块
+  /api/v1/sort/sortById:
+    get:
+      consumes:
+      - application/json
+      description: 单个挑战排行查询详情
+      parameters:
+      - description: id
+        in: path
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/InterfaceEntity.UserImg'
+            type: array
+      summary: 单个挑战排行查询
+      tags:
+      - 排行模块
+  /api/v1/user/getUser:
+    post:
+      consumes:
+      - application/json
+      description: 根据token获取登录用户详情信息
+      parameters:
+      - description: token
+        in: path
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 获取用户信息
+      tags:
+      - 用户模块
+  /api/v1/user/login:
+    post:
+      consumes:
+      - application/json
+      description: 登录详情信息
+      parameters:
+      - description: username
+        in: path
+        name: username
+        required: true
+        type: string
+      - description: password
+        in: path
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 用户登录
+      tags:
+      - 用户模块
+  /api/v1/user/register:
+    post:
+      consumes:
+      - application/json
+      description: 用户注册详情
+      parameters:
+      - description: username
+        in: path
+        name: username
+        required: true
+        type: string
+      - description: password
+        in: path
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 用户注册
+      tags:
+      - 用户模块
+  /api/v1/user/sort:
+    get:
+      consumes:
+      - application/json
+      description: 用户排行查询详情
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/InterfaceEntity.UserInfo'
+            type: array
+      summary: 用户排行查询
+      tags:
+      - 用户模块
+swagger: "2.0"

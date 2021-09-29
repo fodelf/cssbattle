@@ -1,0 +1,8 @@
+numpy==1.18.5
+opencv_python==4.2.0.34
+Werkzeug==1.0.1
+Flask==1.1.2
+requests==2.24.0
+matplotlib==3.2.2
+html2image==2.0.1
+Pillow==8.3.2
