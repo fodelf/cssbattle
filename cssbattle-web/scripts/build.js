@@ -10,13 +10,13 @@ var targetVersion = '0.0.0';
 const step = (msg) => console.log(chalk.cyan(msg));
 const args = require('minimist')(process.argv.slice(2));
 async function main() {
-  // step('\nUpdateVersion...');
-  // await updateVersion();
-  // step('\nUpdateConfig...');
-  // await updateConfig();
-  // step('\nBuildPackage...');
-  // await buildPackage();
-  // console.log(chalk.green(`静态资源构建完成`));
+  step('\nUpdateVersion...');
+  await updateVersion();
+  step('\nUpdateConfig...');
+  await updateConfig();
+  step('\nBuildPackage...');
+  await buildPackage();
+  console.log(chalk.green(`静态资源构建完成`));
   step('\nUploadOss...');
   await uploadOss();
   console.log(chalk.green(`oss 上传成功`));
@@ -32,19 +32,19 @@ async function buildDocker() {
     console.error(error);
   }
   await run('docker', ['build', '-t', 'fodelf/cssbattleweb', '.']);
-  // await run('docker', ['push', 'fodelf/cssbattleweb']);
+  await run('docker', ['push', 'fodelf/cssbattleweb']);
 }
 
 async function buildPackage() {
   await run('npm', ['run', 'build']);
-  // const { stdout } = await execa('git', ['diff'], { stdio: 'pipe' });
-  // if (stdout) {
-  //   step('\nCommitting changes...');
-  //   // await run('git', ['add', '-A']);
-  //   // await run('git', ['commit', '-m', `chore(all): release v${targetVersion}`]);
-  // } else {
-  //   // console.log(chalk.green('No changes to commit.'));
-  // }
+  const { stdout } = await execa('git', ['diff'], { stdio: 'pipe' });
+  if (stdout) {
+    step('\nCommitting changes...');
+    await run('git', ['add', '-A']);
+    await run('git', ['commit', '-m', `chore(all): release v${targetVersion}`]);
+  } else {
+    console.log(chalk.green('No changes to commit.'));
+  }
 }
 
 async function updateVersion() {

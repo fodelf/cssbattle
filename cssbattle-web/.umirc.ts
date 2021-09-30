@@ -25,7 +25,7 @@ export default defineConfig({
       rel: 'icon',
       href:
         process.env.NODE_ENV === 'production'
-          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.8/'
+          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.9/'
           : '/favicon.ico',
     },
   ],
@@ -36,7 +36,7 @@ export default defineConfig({
   fastRefresh: {},
   publicPath:
     process.env.NODE_ENV === 'production'
-      ? 'https://cdn.wuwenzhou.com.cn/web/0.0.8/'
+      ? 'https://cdn.wuwenzhou.com.cn/web/0.0.9/'
       : '/',
   proxy: {
     '/api': {

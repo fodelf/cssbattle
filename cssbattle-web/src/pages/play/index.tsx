@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:49:43
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-09-29 09:35:50
+ * @LastEditTime: 2021-09-30 18:18:01
  */
 import { useCallback, useState, useRef, useEffect } from 'react';
 import styles from './index.less';
@@ -97,7 +97,7 @@ const Play: React.FC = (props: any) => {
   const [loading, setLoading] = useState(false);
   const [colors, setColors] = useState([]);
   const [visible, setVisible] = useState(false);
-
+  const [codeCount, setCodeCount] = useState(0);
   const iframeRef = useRef(null);
   const iframeBoxRef = useRef(null);
   const draggleLineRef = useRef(null);
@@ -108,6 +108,16 @@ const Play: React.FC = (props: any) => {
   };
 
   useEffect(() => {
+    // let dis = codeValue ? codeValue.match(/\n/g)?.length : 0;
+    // if (!dis) {
+    //   dis = 0;
+    // }
+    // let space = codeValue ? codeValue.match(/\s*/g)?.length : 0;
+    // if (!space) {
+    //   space = 0;
+    // }
+    const codeString = codeValue.replace(/\s*/g, '');
+    setCodeCount(codeString.length);
     changeStyle();
   }, [checkType, codeValue]);
 
@@ -128,7 +138,7 @@ const Play: React.FC = (props: any) => {
         setMatch(match);
       } else {
         setCodeValue(
-          `<div>\n  <div></div>\n</div>\n\n<style>\n  div {\n    width: 100px;\n    height: 100px;\n    background: #dd6b4d;\n  }\n</style>\n\n<!-- 在此编辑器中编写 HTML/CSS 并以尽可能少的代码复制给定的目标图像。\n 你在这里写的，按原样呈现 -->\n\n<!-- 得分 -->\n<!-- 分数是根据您使用的字符数（此评论包括：P）以及复制图像的接近程度计算得出的。 \n阅读常见问题解答 (https://cssbattle.dev/faqs) 了解更多信息。 -->\n<!-- 总结：匹配度越高，使用字符数越少得分越高--> \n\n<!-- 重要提示：提交前删除此段提示信息-->`,
+          `<div>\n  <div></div>\n</div>\n\n<style>\n  div {\n    width: 100px;\n    height: 100px;\n    background: #dd6b4d;\n  }\n</style>\n\n<!-- 在此编辑器中编写 HTML/CSS 并以尽可能少的代码复制给定的目标图像。\n 你在这里写的，按原样呈现 -->\n\n<!-- 得分 -->\n<!-- 分数是根据您使用的字符数（此评论包括：P）以及复制图像的接近程度计算得出的。 \n阅读常见问题解答 (https://cssbattle.dev/faqs) 了解更多信息。 --> \n<!-- 计算分数时已经去除空格无需再压缩代码--> \n<!-- 总结：匹配度越高，使用字符数越少得分越高--> \n\n<!-- 重要提示：提交前删除此段提示信息-->`,
         );
       }
     });
@@ -256,7 +266,10 @@ const Play: React.FC = (props: any) => {
       <div className={styles.playLeft}>
         <div className={styles.title}>
           <span className={styles.textTit}>编辑</span>
-          <span className={styles.textTit}>字符数:{codeValue.length}</span>
+          <span className={styles.textTit}>
+            字符数:
+            {codeCount}
+          </span>
         </div>
         <div className={styles.leftContent}>
           <CodeMirror
