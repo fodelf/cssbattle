@@ -3,8 +3,8 @@
  * @version:
  * @Author: pym
  * @Date: 2021-08-28 11:39:09
- * @LastEditors: pym
- * @LastEditTime: 2021-10-07 21:51:35
+ * @LastEditors: 吴文周
+ * @LastEditTime: 2021-10-09 08:51:52
  */
 import { Button, List, Skeleton, Avatar, Tag } from 'antd';
 import { getImgList, getBattleTypeList, getRankList } from '@/api/home';
@@ -32,23 +32,22 @@ const CurrentBattle: React.FC = (props) => {
             CSS 代码对战游戏来了！使用您的 CSS
             技能以尽可能少的代码复制目标。请随意查看以下目标并测试您的 CSS 技能
           </p>
-          {!localStorage.getItem('token') ? 
+          {!localStorage.getItem('token') ? (
             <div className={styles.btn}>
               <Button type="primary" onClick={toLogin}>
                 登录/注册
               </Button>
-              <Button type="primary" onClick={toManage}>
+              {/* <Button type="primary" onClick={toManage}>
                 前端面试管理
-              </Button>
+              </Button> */}
             </div>
-            :
+          ) : (
             <div className={styles.btn}>
-              <Button type="primary" onClick={toManage}>
+              {/* <Button type="primary" onClick={toManage}>
                 前端面试管理
-              </Button>
+              </Button> */}
             </div>
-          }
-           
+          )}
         </div>
       </div>
     </>
@@ -199,14 +198,14 @@ const Home: React.FC = () => {
       getUserInfo({
         token,
       }).then((res) => {
-        if(res.data.data.userId) {
-          localStorage.setItem('userId', res.data.data.UserId)
-        }else {
-          localStorage.setItem('userId', `${new Date().getTime()}`)
+        if (res.data.data.userId) {
+          localStorage.setItem('userId', res.data.data.UserId);
+        } else {
+          localStorage.setItem('userId', `${new Date().getTime()}`);
         }
       });
-    }else {
-      localStorage.setItem('userId', `${new Date().getTime()}`)
+    } else {
+      localStorage.setItem('userId', `${new Date().getTime()}`);
     }
   }, []);
 

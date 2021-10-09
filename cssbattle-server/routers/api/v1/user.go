@@ -2,6 +2,7 @@ package v1
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -30,13 +31,12 @@ func Login(c *gin.Context) {
 	appG := app.Gin{C: c}
 	var userInfo InterfaceEntity.UserInfo
 	c.ShouldBind(&userInfo)
-	db := database.GetMgoCli().Database("css_db")
-	collection := db.Collection("user")
+	fmt.Println(userInfo)
 	filter := bson.D{{"username", userInfo.UserName}, {"password", userInfo.Password}}
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
 	var user InterfaceEntity.UserInfo
-	err := collection.FindOne(ctx, filter).Decode(&user)
+	mg := database.NewMgo("user")
+	err := database.FindByFitter(mg, filter).Decode(&user)
+	fmt.Println("user", user)
 	token, _ := jwt.GenerateToken(user)
 	if err == mongo.ErrNoDocuments {
 		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
