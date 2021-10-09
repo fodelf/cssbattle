@@ -8,3 +8,10 @@ declare module '*.svg' {
   const url: string;
   export default url;
 }
+interface Lsp {
+  new (options: any): Lsp;
+  connect: Function;
+}
+interface Window {
+  Lsp: Lsp;
+}

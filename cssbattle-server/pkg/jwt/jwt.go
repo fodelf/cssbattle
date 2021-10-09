@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-08-28 14:47:00
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-09-12 22:57:06
+ * @LastEditTime: 2021-10-07 17:40:57
  */
 package jwt
 
@@ -31,9 +31,11 @@ const (
 // 生成token
 func GenerateToken(user InterfaceEntity.UserInfo) (string, error) {
 	maxAge := 60 * 60 * 24 * 7
+	fmt.Println("userid", user.Id)
 	customClaims := &CustomClaims{
 		UserName: user.UserName, //用户姓名
 		UserIcon: user.UserIcon,
+		UserId:   user.Id,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Duration(maxAge) * time.Second).Unix(), // 过期时间，必须设置
 			Issuer:    user.UserName,                                              // 非必须，也可以填充用户名，

@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	_ "github.com/fodelf/cssbattle/docs"
+	"github.com/fodelf/cssbattle/middleware/auth"
 
 	// proxy "gateway/middleware/proxy"
 	v1 "github.com/fodelf/cssbattle/routers/api/v1"
@@ -17,7 +18,7 @@ func InitRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
-	// r.Use(proxy.ReverseProxy())
+	r.Use(auth.Auth())
 	// proxyMiddle := r.Group("/*")
 	// proxyMiddle.Use(proxy.ReverseProxy())
 	r.LoadHTMLGlob("web/*.html")          // 添加入口index.html
@@ -86,6 +87,25 @@ func InitRouter() *gin.Engine {
 	{
 		// 图片相关
 		sortApi.GET("/sortById", v1.SortById)
+	}
+	// 面试部分
+	auditionApi := apiRoot.Group("/audition")
+	{
+		// 创建面试
+		auditionApi.POST("/create", v1.AuditionCreate)
+		// 获取列表
+		auditionApi.POST("/getAuditionList", v1.GetAuditionList)
+		// 创建面试css
+		auditionApi.POST("/createCss", v1.AuditionCreateCss)
+		// 创建面试css
+		auditionApi.POST("/getAuditionCssList", v1.GetAuditionCssList)
+		// 创建面试css
+		auditionApi.POST("/getAuditionDetail", v1.GetAuditionDetail)
+		// 创建面试css
+		auditionApi.POST("/auditionIMGCompare", v1.AuditionIMGCompare)
+		// 创建面试css
+		auditionApi.POST("/getAuditionIMGCompare", v1.GetAuditionIMGCompare)
+
 	}
 	return r
 }

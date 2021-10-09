@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-29 19:33:21
  * @LastEditors: pym
- * @LastEditTime: 2021-09-12 11:38:46
+ * @LastEditTime: 2021-10-07 21:49:14
  */
 import { message } from 'antd';
 import axios from 'axios';
@@ -31,6 +31,11 @@ axios.interceptors.request.use((config: any) => {
 
 //HTTPrequest拦截
 axios.interceptors.response.use((config: any) => {
+  console.log(config)
+  if(config.status === 401) {
+    localStorage.clear()
+    window.location.href = `${location.origin}/index/login`
+  }
   return config;
 }, (error: any) => {
   message.error('服务请求失败！');

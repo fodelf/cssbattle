@@ -2,10 +2,6 @@
 node_modules
 cssbattle-web/dist/*
 cssbattle-server/web/*
-oss.go
-img.go
-pkg/oss/*
-/pkg/oss/*
 tmp/*
 # Log files
 npm-debug.log*
@@ -27,5 +23,4 @@ yarn-error.log*
 .env.local
 .env.*.local
 cssbattle
-sql.go
 conf

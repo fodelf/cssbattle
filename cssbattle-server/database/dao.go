@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-08-27 15:03:49
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-09-14 10:40:41
+ * @LastEditTime: 2021-10-07 19:37:11
  */
 package database
 
@@ -66,12 +66,12 @@ func InsertOne(m Mgo, document interface{}) (insertResult *mongo.InsertOneResult
 }
 
 // 插入多个
-func (m *Mgo) InsertMany(documents []interface{}) (insertManyResult *mongo.InsertManyResult) {
-	insertManyResult, err := m.collection.InsertMany(context.TODO(), documents)
+func InsertMany(m Mgo, documents []interface{}) (insertManyResult *mongo.InsertManyResult, err error) {
+	insertManyResult, err = m.collection.InsertMany(context.TODO(), documents)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return
+	return insertManyResult, err
 }
 
 // 查询单个
@@ -82,13 +82,11 @@ func FindByFitter(m Mgo, filter interface{}) *mongo.SingleResult {
 
 // 查询单个
 func FindOne(m Mgo, filter interface{}) *mongo.SingleResult {
-	_, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	cxt, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	singleResult := m.collection.FindOne(context.TODO(), filter)
-	if singleResult != nil {
-		fmt.Println(singleResult)
-	}
-	return singleResult
+	cur := m.collection.FindOne(cxt, filter)
+	fmt.Println(cur)
+	return cur
 }
 
 // 查询count总数
@@ -108,6 +106,22 @@ func FindAll(m Mgo, key string, Limit int64, sort int) (cur *mongo.Cursor, err e
 	filter := bson.D{}
 
 	//where
+	findOptions := options.Find()
+	findOptions.SetSort(SORT)
+	findOptions.SetLimit(Limit)
+	// findOptions.SetSkip(0)
+	cur, err = m.collection.Find(context.TODO(), filter, findOptions)
+	return cur, err
+}
+
+// 按选项查询集合
+// Skip 跳过
+// Limit 读取数量
+// Sort  排序   1 倒叙 ， -1 正序
+func QueryAll(m Mgo, key string, Limit int64, sort int, filter interface{}) (cur *mongo.Cursor, err error) {
+	SORT := bson.D{{key, sort}}
+	_, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 	findOptions := options.Find()
 	findOptions.SetSort(SORT)
 	findOptions.SetLimit(Limit)
@@ -190,6 +204,16 @@ func (m *Mgo) DeleteMany(key string, value interface{}) int64 {
 // 更新一个
 func UpdateMany(m Mgo, key string, value interface{}, update interface{}) (updateResult *mongo.UpdateResult) {
 	filter := bson.D{{key, value}}
+	updateResult, err := m.collection.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("updateResult", updateResult)
+	return updateResult
+}
+
+// 更新一个
+func UpdateManyByFilter(m Mgo, filter interface{}, update interface{}) (updateResult *mongo.UpdateResult) {
 	updateResult, err := m.collection.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
 		log.Fatal(err)

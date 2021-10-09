@@ -1,0 +1,123 @@
+.manageContent {
+  width:100%;
+  min-height: calc(100vh - 50px);
+  .manageLeft {
+    min-height: calc(100vh - 50px);
+    background: #353c48;
+    .title {
+      height: 50px;
+      line-height: 50px;
+      color: #fff;
+      font-size: 16px;
+      padding-left: 20px;
+      margin: 0;
+    }
+    .list {
+      li {
+        height: 45px;
+        line-height: 45px;
+        color: #8d97ad;
+        font-size: 14px;
+        padding-left: 45px;
+        background: url(../../assets/imgs/web.svg) no-repeat 20px 12px;
+        background-size: 18px 18px;
+        cursor: pointer;
+      }
+      li:hover {
+        color: #fb9678;
+        background: url(../../assets/imgs/web-active.svg) no-repeat 20px 12px;
+        background-size: 18px 18px;
+      }
+      li.active {
+        color: #fb9678;
+        background: #2a303a url(../../assets/imgs/web-active.svg) no-repeat 20px 12px;
+        background-size: 18px 18px;
+      }
+    }
+     
+  }
+  .manageRight {
+    background: #3c4452;
+    padding:20px;
+    :global {
+      .ant-breadcrumb {
+        height: 22px;
+        margin-bottom:15px;
+        .ant-breadcrumb-link {
+          color: #8d97ad;
+          cursor:pointer;
+        }
+        span:not(:last-child) {
+          .ant-breadcrumb-link:hover {
+            text-decoration: underline;
+          }
+        }
+        .ant-breadcrumb-separator {
+          color: #8d97ad;
+        }
+        span:last-child {
+          .ant-breadcrumb-link {
+            color: #fb9678;
+            cursor: default;
+          }
+        }
+         
+      }
+      .ant-table {
+        background: none;
+         
+        .ant-table-container{
+          border-color: #8d97ad;
+          .ant-table-content {
+            table {
+              border-top: 1px #8d97ad solid;
+            }
+          }
+          .ant-table-thead {
+            tr {
+              th {
+                background: none;
+                color: #fff;
+                border-bottom: 1px #8d97ad solid;
+                border-right: 1px #8d97ad solid;
+              }
+            }
+          }
+          .ant-table-tbody {
+            tr {
+              td {
+                background: none;
+                color: #fff;
+                border-bottom: 1px #8d97ad solid;
+                border-right: 1px #8d97ad solid;
+                span {
+                  cursor: pointer;
+                  margin-right: 15px;
+                }
+                span:hover {
+                  color: #fb9678;
+                }
+              }
+            }
+          }
+        }
+         
+      }
+    }
+    .topBtn {
+      margin-bottom: 10px;
+      button {
+        margin-right: 15px;
+      }
+    }
+    .mainContent {
+      width: 100%;
+      height: calc(100% - 37px);
+      background: #303641;
+      padding:15px;
+    }
+  }
+}
+.tableImg {
+  width: 100px;
+}

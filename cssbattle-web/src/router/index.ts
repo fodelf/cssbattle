@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-09-05 10:38:23
  * @LastEditors: pym
- * @LastEditTime: 2021-09-14 16:42:53
+ * @LastEditTime: 2021-10-07 18:34:16
  */
 const routes =  [
   { 
@@ -26,6 +26,33 @@ const routes =  [
       {
         path: '/index/login', 
         component: '@/pages/login/index',
+      },
+      { 
+        path: '/index/manage', 
+        component: '@/pages/manage/list',
+        // redirect:'/index/manage/cssManage',
+      },
+      {
+        path: '/index/detail/:id',
+        component: '@/pages/manage/index',
+        routes: [
+          {
+            path: 'cssManage',
+            component: '@/pages/manage/children/cssManage/index'
+          },
+          {
+            path: 'pratiseManage',
+            component: '@/pages/manage/children/pratiseManage/index',
+          },
+          {
+            path: 'addPratise',
+            component: '@/pages/manage/children/addPratise/index',
+          }
+        ]
+      },
+      { 
+        path: '/index/audition/:id', 
+        component: '@/pages/audition/index',
       },
     ]
   },

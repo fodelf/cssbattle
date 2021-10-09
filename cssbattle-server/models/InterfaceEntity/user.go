@@ -1,7 +1,8 @@
 package InterfaceEntity
 
-//汇总实体类
+//用户实体类
 type UserInfo struct {
+	Id           string  `json:"id" bson:"_id"`
 	UserName     string  `json:"userName"`
 	UserIcon     string  `json:"userIcon"`
 	Password     string  `json:"password"`

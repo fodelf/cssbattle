@@ -1,0 +1,251 @@
+.playEditor {
+  width: 100%;
+  height: calc(100vh - 50px);
+  display: flex;
+  position: relative;
+  .title {
+    display: flex;
+    justify-content: space-between;
+    height: 35px;
+    line-height: 35px;
+    background: #27313a;
+    color: #fff;
+    padding: 0 20px;
+    .textTit {
+      font-size: 18px;
+      margin-right: 15px;
+    }
+  }
+
+  .playLeft {
+    flex: 1;
+    height: 100%;
+
+    .leftContent {
+      height: calc(100% - 35px);
+      background: rgba(19, 24, 28, 0.95);
+      box-sizing: border-box;
+      position: relative;
+      overflow-y: auto;
+    }
+    :global {
+      .react-codemirror2 {
+        position: relative;
+        height: 100%;
+
+        .CodeMirror {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          height: auto;
+        }
+      }
+    }
+    .confirmCodeBtn, .btnList {
+      z-index: 100;
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+    }
+    .btnList {
+      button {
+        margin-left: 15px;
+      }
+    }
+  }
+  .playRight {
+    width: 440px;
+
+    .rightContent {
+      height: calc(100% - 35px);
+      background: rgba(19, 24, 28, 0.95);
+      padding: 20px;
+      box-sizing: border-box;
+      border-left: 1px #27313a solid;
+      overflow-y: auto;
+    }
+    :global {
+      .ant-radio-group {
+        .ant-radio-wrapper {
+          color: #fff;
+          .ant-radio {
+            color: #fff;
+          }
+        }
+      }
+    }
+    .iframeContent {
+      width: 100%;
+      height: 300px;
+      position: relative;
+      cursor: col-resize;
+      .iframeBox {
+        width: 100%;
+        height: 300px;
+        // background: #eee;
+        position: absolute;
+        left: 0;
+        z-index: 1;
+        display: flex;
+        // pointer-events: none;
+        iframe {
+          border: none;
+          background: #fff;
+          width: calc(100% - 1px);
+          height: 100%;
+          pointer-events: none;
+        }
+        .dragLine {
+          width: 1px;
+          height: 100%;
+          background: #f00;
+        }
+      }
+      .imgBox {
+        width: 100%;
+        height: 300px;
+        // background: #eee;
+        position: absolute;
+        left: 0;
+      }
+    }
+    .scoreTit {
+      color: #fff;
+      font-size:20px;
+      line-height:40px;
+      padding:10px 0;
+      margin-bottom:0;
+      display:flex;
+      &:after {
+        content: '';
+        flex:1;
+        height: 1px;
+        background: #323f4a;
+        margin-top: 20px;
+      }
+    }
+
+    .scoreContent {
+      border-radius: 5px;
+      background: rgb(19, 24, 28);
+      color: #fff;
+      padding: 20px;
+      font-size: 18px;
+      .score {
+        display: flex;
+        justify-content: space-between;
+      }
+      Button {
+        width: 100%;
+        background: #323f4a;
+        color: #fff;
+        font-size: 16px;
+        border: 1px #323f4a solid;
+        height: 35px;
+        line-height: 35px;
+        padding: 0;
+      }
+    }
+    .colorContent {
+      border-radius: 5px;
+      background: rgb(19, 24, 28);
+      color: #fff;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 20px;
+      .colorItem {
+        line-height: 24px;
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+        margin-bottom: 10px;
+        font-size: 16px;
+        color: #a0b3c6;
+        cursor: pointer;
+      }
+      .circleBg {
+        width: 20px;
+        height: 20px;
+        border: 1px solid hsla(0, 0%, 100%, 0.5);
+        display: inline-block;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+    }
+    .connectContent {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      img {
+        height: 250px;
+      }
+    }
+    .imgBg {
+      width: 400px;
+      height: 300px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  .rank {
+    font-size: 18px;
+    color: #a0b3c6;
+    .rankBg {
+      display: inline-block;
+      width: 30px;
+      height: 40px;
+    }
+  }
+  :global {
+    .ant-drawer-content {
+      background: #171d23;
+      overflow-y: auto;
+      .ant-drawer-header {
+        background: #27313a;
+        border-bottom: 1px #323f4a solid;
+      }
+      .ant-drawer-title {
+        color: #cbd1e1;
+        font-size: 16px;
+      }
+      .ant-list-item {
+        color: #fff;
+        border-bottom: none;
+        padding: 10px;
+        margin: 12px 0;
+        border-radius: 10px;
+        .ant-list-item-meta-description {
+          color: #a0b3c6;
+          font-size: 16px;
+        }
+        .ant-list-item-meta-title {
+          color: #cbd1e1;
+          font-size: 16px;
+          margin: 0;
+        }
+        &:first-child {
+          background: rgba(255, 223, 0, 0.15);
+          i {
+            background: url(../../assets/imgs/gold.svg) no-repeat center;
+          }
+        }
+        &:nth-child(2) {
+          background: hsla(0, 0%, 75.3%, 0.15);
+          i {
+            background: url(../../assets/imgs/silver.svg) no-repeat center;
+          }
+        }
+        &:nth-child(3) {
+          background: rgba(205, 127, 50, 0.15);
+          i {
+            background: url(../../assets/imgs/bronze.svg) no-repeat center;
+          }
+        }
+      }
+    }
+  }
+}

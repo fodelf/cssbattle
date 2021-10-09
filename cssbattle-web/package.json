@@ -7,6 +7,7 @@
     "deploy": "node  ./scripts/build.js",
     "deploy:server": "node  ./scripts/buildServer.js",
     "deploy:ai": "node  ./scripts/buildAI.js",
+    "deploy:im": "node  ./scripts/buildIM.js",
     "postinstall": "umi generate tmp",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
     "test": "umi-tst",

@@ -3,8 +3,8 @@
  * @version:
  * @Author: pym
  * @Date: 2021-08-28 11:39:09
- * @LastEditors: 吴文周
- * @LastEditTime: 2021-09-29 09:35:19
+ * @LastEditors: pym
+ * @LastEditTime: 2021-10-07 21:51:35
  */
 import { Button, List, Skeleton, Avatar, Tag } from 'antd';
 import { getImgList, getBattleTypeList, getRankList } from '@/api/home';
@@ -18,6 +18,10 @@ const CurrentBattle: React.FC = (props) => {
     history.push('/index/login');
   };
 
+  const toManage = () => {
+    history.push('/index/manage');
+  };
+
   return (
     <>
       <p className={styles.battleTit}>欢迎</p>
@@ -28,13 +32,23 @@ const CurrentBattle: React.FC = (props) => {
             CSS 代码对战游戏来了！使用您的 CSS
             技能以尽可能少的代码复制目标。请随意查看以下目标并测试您的 CSS 技能
           </p>
-          {!localStorage.getItem('token') && (
+          {!localStorage.getItem('token') ? 
             <div className={styles.btn}>
               <Button type="primary" onClick={toLogin}>
                 登录/注册
               </Button>
+              <Button type="primary" onClick={toManage}>
+                前端面试管理
+              </Button>
             </div>
-          )}
+            :
+            <div className={styles.btn}>
+              <Button type="primary" onClick={toManage}>
+                前端面试管理
+              </Button>
+            </div>
+          }
+           
         </div>
       </div>
     </>
@@ -184,7 +198,15 @@ const Home: React.FC = () => {
     if (token) {
       getUserInfo({
         token,
-      }).then((res) => {});
+      }).then((res) => {
+        if(res.data.data.userId) {
+          localStorage.setItem('userId', res.data.data.UserId)
+        }else {
+          localStorage.setItem('userId', `${new Date().getTime()}`)
+        }
+      });
+    }else {
+      localStorage.setItem('userId', `${new Date().getTime()}`)
     }
   }, []);
 

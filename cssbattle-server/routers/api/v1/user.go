@@ -13,6 +13,7 @@ import (
 	"github.com/fodelf/cssbattle/pkg/jwt"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -36,7 +37,7 @@ func Login(c *gin.Context) {
 	defer cancel()
 	var user InterfaceEntity.UserInfo
 	err := collection.FindOne(ctx, filter).Decode(&user)
-	token, _ := jwt.GenerateToken(userInfo)
+	token, _ := jwt.GenerateToken(user)
 	if err == mongo.ErrNoDocuments {
 		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
 	} else if err != nil {
@@ -72,11 +73,19 @@ func GetUser(c *gin.Context) {
 	appG := app.Gin{C: c}
 	var tokenInfo InterfaceEntity.TokenInfo
 	c.ShouldBind(&tokenInfo)
-	user, err := jwt.ParseToken(tokenInfo.Token)
-	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
+	filter := bson.D{{"token", tokenInfo.Token}}
+	mg := database.NewMgo("token")
+	err := database.FindOne(mg, filter).Decode(&tokenInfo)
+	if err == mongo.ErrNoDocuments {
+		appG.Response(http.StatusUnauthorized, e.INVALID_AUTH, nil)
 	} else {
-		appG.Response(http.StatusOK, e.SUCCESS, user)
+		user, err := jwt.ParseToken(tokenInfo.Token)
+		if err != nil {
+			appG.Response(http.StatusInternalServerError, e.ERROR, nil)
+		} else {
+			appG.Response(http.StatusOK, e.SUCCESS, user)
+		}
+
 	}
 
 }
@@ -107,6 +116,7 @@ func Register(c *gin.Context) {
 	var user InterfaceEntity.UserInfo
 	err := collection.FindOne(ctx, filter).Decode(&user)
 	if err == mongo.ErrNoDocuments {
+		userInfo.Id = primitive.ObjectID.Hex(primitive.NewObjectID())
 		_, err1 := database.InsertOne(mg, userInfo)
 		if err1 != nil {
 			appG.Response(http.StatusInternalServerError, e.ERROR, nil)
