@@ -4,12 +4,12 @@
  * @Author: pym
  * @Date: 2021-10-07 10:11:28
  * @LastEditors: pym
- * @LastEditTime: 2021-10-07 19:15:04
+ * @LastEditTime: 2021-10-10 20:46:08
  */
-import { Row, Col, Button, Table, Modal, Form, Input, Breadcrumb, Popover } from 'antd'
+import { Row, Col, Button, Table, Modal, Form, Input, Breadcrumb, Popover, Popconfirm, message } from 'antd'
 import styles from './index.less'
 import { history } from 'umi'
-import { getList, createAudition } from '@/api/manage'
+import { getList, createAudition, deleteAudition } from '@/api/manage'
 import { useEffect, useState, useRef } from 'react'
 
 const InterViewList: React.FC = (props: any) => {
@@ -44,7 +44,14 @@ const InterViewList: React.FC = (props: any) => {
         return (
           <>
             <span onClick={()=>editAudition(record)}>编辑</span>
-            <span>删除</span>
+            <Popconfirm
+              title="是否确定删除?"
+              onConfirm={()=>deleteAu(record)}
+              okText="确定"
+              cancelText="取消"
+            >
+              <span>删除</span>
+            </Popconfirm>
             <Popover
               content={
                 <Input
@@ -62,7 +69,7 @@ const InterViewList: React.FC = (props: any) => {
                   readOnly
                 />
               }
-              title="分享"
+              title="分享面试链接"
               trigger="click"
             >
               <span>分享</span>
@@ -83,6 +90,14 @@ const InterViewList: React.FC = (props: any) => {
     getList().then(res=> {
       console.log(res.data.data)
       setAuditionList(res.data.data||[])
+    })
+  }
+
+  const deleteAu =(item: any)=> {
+    deleteAudition({
+      id: item.id
+    }).then(res=> {
+      message.success('删除成功')
     })
   }
 
@@ -113,7 +128,7 @@ const InterViewList: React.FC = (props: any) => {
       <Col span={3}  className={styles.manageLeft}>
         <p className={styles.title}>面试合集</p>
         <ul className={styles.list}>
-          <li className={currentType === 0 ?styles.active:''} onClick={()=>setCurrentType('web')}>前端面试</li>
+          <li className={currentType === 0 ?styles.active:''}>前端面试</li>
         </ul>
       </Col>
       <Col span={21} className={styles.manageRight}>
@@ -128,6 +143,7 @@ const InterViewList: React.FC = (props: any) => {
             columns={columns}
             dataSource={auditionList}
             pagination={false}
+            locale={{emptyText: '暂无数据'}}
           />
         </div>
       </Col>

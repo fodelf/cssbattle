@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-08-27 15:03:49
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-07 19:37:11
+ * @LastEditTime: 2021-10-10 17:27:17
  */
 package database
 
@@ -181,14 +181,9 @@ func (m *Mgo) ParsingId(result string) (time.Time, uint64) {
 }
 
 // 删除
-func (m *Mgo) Delete(key string, value interface{}) int64 {
-	filter := bson.D{{key, value}}
+func Delete(m Mgo, filter interface{}) (DeletedCount int64, err error) {
 	count, err := m.collection.DeleteOne(context.TODO(), filter, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-	return count.DeletedCount
-
+	return count.DeletedCount, err
 }
 
 // 删除多个
@@ -213,13 +208,13 @@ func UpdateMany(m Mgo, key string, value interface{}, update interface{}) (updat
 }
 
 // 更新一个
-func UpdateManyByFilter(m Mgo, filter interface{}, update interface{}) (updateResult *mongo.UpdateResult) {
-	updateResult, err := m.collection.UpdateOne(context.TODO(), filter, update)
+func UpdateManyByFilter(m Mgo, filter interface{}, update interface{}) (updateResult *mongo.UpdateResult, err error) {
+	updateResult, err = m.collection.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println("updateResult", updateResult)
-	return updateResult
+	return updateResult, err
 }
 
 // 更新一个

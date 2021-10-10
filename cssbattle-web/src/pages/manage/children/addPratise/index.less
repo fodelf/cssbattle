@@ -8,8 +8,117 @@
     font-size: 20px;
     color: #fff;
     border-bottom: 1px #4f5467 solid;
+    position: relative;
+    .choiceOption {
+      position:absolute;
+      left:10px;
+      :global {
+        .ant-select {
+          color: #ced4da;
+          .ant-select-selector {
+            background-color: #353c48;
+            border-color: #353c48;
+          }
+          .ant-select-arrow {
+            color: #ced4da;
+          }
+        }
+      }
+    }
+    :global {
+      .ant-input {
+        width: auto;
+        margin-right: 15px;
+        background: #353c48;
+        border:none;
+        color: #ced4da;
+      }
+    }
     span {
       margin-right: 15px;
     }
+  }
+}
+
+:global {
+  
+  .ant-select {
+    color: #ced4da;
+    .ant-select-selector {
+      background-color: #353c48;
+      border-color: #353c48;
+    }
+    .ant-select-arrow {
+      color: #ced4da;
+    }
+  }
+  .ant-form {
+    margin-top:30px;
+    .ant-form-item, .ant-form-item-has-error {
+      .ant-form-item-label {
+        label {
+          color: #ced4da;
+          font-size: 16px;
+        }
+      }
+      .anticon {
+        font-size: 18px;
+        color: #ced4da;
+        margin-left:15px;
+      }
+      .ant-input {
+        background: #353c48;
+        border:none;
+        color: #ced4da;
+      }
+      .ant-btn {
+        background: #353c48;
+        border:none;
+        color: #ced4da;
+      }
+      .ant-radio-group {
+        color: #ced4da;
+        .ant-radio-wrapper {
+          color: #ced4da;
+          .ant-radio-inner {
+            background-color: #272c36;
+            border: 1px #adb5bd solid;
+            outline: none;
+          }
+          &-checked {
+            .ant-radio-inner {
+              background-color: #fb9678;
+              border: 1px solid #fb9678;
+              &::after {
+                background-color: #fff;
+              }
+            }
+          }
+        }
+      }
+      .ant-checkbox-group {
+        .ant-checkbox-wrapper {
+          color: #ced4da;
+          .ant-checkbox-inner{
+            background-color: #272c36;
+            border: 1px #adb5bd solid;
+            outline: none;
+          }
+          &-checked {
+            .ant-checkbox-inner {
+              background-color: #fb9678;
+              border: 1px solid #fb9678;
+            }
+          }
+        }
+      }
+    }
+    .ant-form-item-has-error {
+      :not(.ant-input-disabled):not(.ant-input-borderless).ant-input {
+        background: #353c48;
+        border:none;
+        color: #ced4da;
+      }
+    } 
   }
 }

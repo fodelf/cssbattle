@@ -4,12 +4,13 @@
  * @Author: pym
  * @Date: 2021-10-05 17:07:55
  * @LastEditors: pym
- * @LastEditTime: 2021-10-07 19:27:23
+ * @LastEditTime: 2021-10-10 19:58:22
  */
-import { Button, Table, Modal } from 'antd'
+import { Button, Table, Modal, Popconfirm } from 'antd'
 import { useEffect, useState } from 'react'
-import { getAuditionCssList, createCss } from '@/api/manage'
+import { getAuditionCssList, createCss, deleteCss } from '@/api/manage'
 import styles from '../../index.less' 
+import { message } from 'antd'
 
 const CSSManage: React.FC = (props: any)=> {
   const [cssList, setCssList] = useState([])
@@ -31,7 +32,18 @@ const CSSManage: React.FC = (props: any)=> {
       title: '操作',
       dataIndex: 'action',
       key: 'action',
-      render: (text: any, record: any, index: number) => <span>删除</span>
+      render: (text: any, record: any, index: number) => {
+        return (
+          <Popconfirm
+            title="是否确定删除?"
+            onConfirm={()=>deleteCssAudition(record)}
+            okText="确定"
+            cancelText="取消"
+          >
+            <span>删除</span>
+          </Popconfirm>
+        )
+      } 
     },
   ]
 
@@ -62,16 +74,28 @@ const CSSManage: React.FC = (props: any)=> {
     })
   }
 
+  const deleteCssAudition = (item: any)=> {
+    let params = {
+      id: item.id,
+      auditionId: props.match.params.id
+    }
+    deleteCss(params).then((res:any) => {
+      message.success('删除成功')
+      queryCssList()
+    })
+  }
+
   const changeSelected = (selectedRowKeys: any, selectedRows: any)=>{
     console.log(selectedRowKeys)
     setSelected(selectedRowKeys)
   }
 
   const submitImg = ()=> {
+    console.log('ffff')
     createCss({
       auditionId: props.match.params.id,
       cssIdList: selectedRowKeys
-    }).then(res=> {
+    }).then((res: any)=> {
       setCssVisible(false)
       queryCssList()
     })
@@ -100,6 +124,7 @@ const CSSManage: React.FC = (props: any)=> {
         columns={columns}
         dataSource={cssList}
         pagination={false}
+        locale={{emptyText: '暂无数据'}}
       />
       <Modal title="选择图片" visible={cssVisible} onOk={submitImg} onCancel={()=>setCssVisible(false)} okText="确认" cancelText="取消">
         <Table
@@ -108,6 +133,7 @@ const CSSManage: React.FC = (props: any)=> {
           dataSource={imgList}
           pagination={false}
           scroll={{ y: 400 }}
+          locale={{emptyText: '暂无数据'}}
         />
       </Modal>
     </div>

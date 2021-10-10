@@ -3,8 +3,8 @@
  * @version:
  * @Author: pym
  * @Date: 2021-09-09 16:44:58
- * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-09 22:00:54
+ * @LastEditors: pym
+ * @LastEditTime: 2021-10-10 11:52:11
  */
 import { Input, Form, Button, Tabs, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
@@ -37,14 +37,14 @@ const Login: React.FC = (props: any) => {
       password: values.password,
     };
     login(params).then((res) => {
-      if (res.data.data.login) {
+      // if (res.data.data.login) {
         message.success('登录成功！');
         localStorage.setItem('token', res.data.data.token);
         localStorage.setItem('username', values.username);
         history.push('/index');
-      } else {
-        message.error('登录失败！');
-      }
+      // } else {
+      //   message.error('登录失败！');
+      // }
     });
   };
 
@@ -53,7 +53,10 @@ const Login: React.FC = (props: any) => {
       username: values.username,
       password: values.password,
     };
+    debugger;
     register(params).then((res) => {
+      debugger;
+      console.log(res)
       message.success('注册成功，请登录！');
       setAction('signIn');
     });

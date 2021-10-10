@@ -137,7 +137,7 @@ func IMGCompare(c *gin.Context) {
 		panic(err1)
 	}
 	//如果不存在token
-	if Token != "null" {
+	if Token != "" {
 		user, _ := jwt.ParseToken(Token)
 		filter := bson.D{{"username", user.UserName}}
 		var userImg InterfaceEntity.UserImg
@@ -310,7 +310,7 @@ func GetUserImgDetail(c *gin.Context) {
 	appG := app.Gin{C: c}
 	Token := c.GetHeader("Token")
 	var userImg InterfaceEntity.UserImg
-	if Token != "null" {
+	if Token != "" {
 		id := c.Query("id")
 		mg := database.NewMgo("cssbattle_" + id)
 		user, _ := jwt.ParseToken(Token)

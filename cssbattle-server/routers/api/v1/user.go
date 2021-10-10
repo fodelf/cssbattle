@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/EDDYCJY/go-gin-example/pkg/app"
 	"github.com/fodelf/cssbattle/database"
 	"github.com/fodelf/cssbattle/models/InterfaceEntity"
+	"github.com/fodelf/cssbattle/pkg/app"
 	"github.com/fodelf/cssbattle/pkg/e"
 	"github.com/fodelf/cssbattle/pkg/jwt"
 	"github.com/gin-gonic/gin"
@@ -39,14 +39,7 @@ func Login(c *gin.Context) {
 	fmt.Println("user", user)
 	token, _ := jwt.GenerateToken(user)
 	if err == mongo.ErrNoDocuments {
-		appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
-			"login": false,
-		})
-	} else if err != nil {
-		log.Fatal(err)
-		appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
-			"login": false,
-		})
+		appG.Response(http.StatusInternalServerError, e.ERROR_LOGIN, map[string]interface{}{})
 	} else {
 		mg := database.NewMgo("token")
 		var tokenInfo InterfaceEntity.TokenInfo
@@ -54,12 +47,9 @@ func Login(c *gin.Context) {
 		tokenInfo.ExpireDate = time.Now()
 		_, err := database.InsertOne(mg, tokenInfo)
 		if err != nil {
-			appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
-				"login": false,
-			})
+			appG.Response(http.StatusInternalServerError, e.ERROR_LOGIN, map[string]interface{}{})
 		} else {
 			appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
-				"login": true,
 				"token": token,
 			})
 		}
@@ -123,18 +113,16 @@ func Register(c *gin.Context) {
 	var user InterfaceEntity.UserInfo
 	err := collection.FindOne(ctx, filter).Decode(&user)
 	if err == mongo.ErrNoDocuments {
+		fmt.Println("sssss")
 		userInfo.Id = primitive.ObjectID.Hex(primitive.NewObjectID())
 		_, err1 := database.InsertOne(mg, userInfo)
 		if err1 != nil {
-			appG.Response(http.StatusInternalServerError, e.ERROR, nil)
+			appG.Response(http.StatusInternalServerError, e.ERROR_REJECT, nil)
 		} else {
 			appG.Response(http.StatusOK, e.SUCCESS, nil)
 		}
-	} else if err != nil {
-		log.Fatal(err)
-		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
 	} else {
-		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
+		appG.Response(http.StatusInternalServerError, e.ERROR_REJECT, nil)
 	}
 
 }

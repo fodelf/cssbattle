@@ -105,6 +105,24 @@ func InitRouter() *gin.Engine {
 		auditionApi.POST("/auditionIMGCompare", v1.AuditionIMGCompare)
 		// 创建面试css
 		auditionApi.POST("/getAuditionIMGCompare", v1.GetAuditionIMGCompare)
+		// 创建面试css
+		auditionApi.POST("/deleteCSS", v1.DeleteCSS)
+		// 创建面试css
+		auditionApi.POST("/createExercise", v1.AuditionCreateExercise)
+		// 创建面试css
+		auditionApi.POST("/getAuditionExerciseList", v1.GetAuditionExerciseList)
+		// 创建面试css
+		auditionApi.POST("/getExerciseList", v1.GetExerciseList)
+		// 创建面试css
+		auditionApi.POST("/deleteExercise", v1.DeleteExercise)
+		// 创建面试css
+		auditionApi.POST("/getAuditionExerciseDetail", v1.GetAuditionExerciseDetail)
+		// 创建面试css
+		auditionApi.POST("/createExerciseByLib", v1.AuditionCreateExerciseByLib)
+		// 创建面试css
+		auditionApi.POST("/updateExercise", v1.UpdateAuditionExercise)
+		// 创建面试css
+		auditionApi.POST("/deleteAudition", v1.DeleteAudition)
 
 	}
 	return r

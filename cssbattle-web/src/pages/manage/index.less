@@ -121,3 +121,73 @@
 .tableImg {
   width: 100px;
 }
+
+:global {
+  .ant-modal-header {
+    background: #303641;
+    border-bottom: 1px solid #4f5467;
+    .ant-modal-title {
+      color: #ced4da;
+    }
+  }
+  .ant-modal-footer {
+    border-top: 1px solid #4f5467;
+  }
+  .ant-modal-content {
+    background: #303641;
+    .ant-modal-close, .ant-modal-close:focus, .ant-modal-close:hover {
+      color: #ced4da;
+    }
+    .ant-table  {
+      color: #ced4da;
+      background: #353c48;
+      .ant-checkbox-wrapper {
+        color: #ced4da;
+        .ant-checkbox-inner{
+          background-color: #272c36;
+          border: 1px #adb5bd solid;
+          outline: none;
+        }
+        &-checked {
+          .ant-checkbox-inner {
+            background-color: #fb9678;
+            border: 1px solid #fb9678;
+          }
+        }
+        .ant-checkbox-indeterminate {
+          .ant-checkbox-inner::after {
+            background-color: #fb9678;
+          }
+        } 
+      }
+      .ant-table-header {
+        tr {
+          th {
+            background: #353c48;
+            color: #ced4da;
+            border-color: #4f5467;
+            &:before {
+              background-color: #353c48;
+            }
+          }
+        }
+      }
+      .ant-table-cell-scrollbar {
+        box-shadow: 0 1px 0 1px #353c48;
+      }
+      .ant-table-tbody {
+        tr {
+          td {
+            background: #353c48;
+            color: #ced4da;
+            border-color: #4f5467;
+          }
+        }
+         
+      }
+      .ant-table-thead > tr > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+        background-color: #353c48;
+      }
+    }
+  }
+}

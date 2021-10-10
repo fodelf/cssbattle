@@ -3,12 +3,13 @@
  * @version:
  * @Author: pym
  * @Date: 2021-08-28 11:49:43
- * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-09 08:45:23
+ * @LastEditors: pym
+ * @LastEditTime: 2021-10-10 21:13:28
  */
 import { useCallback, useState, useRef, useEffect } from 'react';
 import styles from './index.less';
-import { Radio, Button, message, Drawer, List, Avatar, Modal } from 'antd';
+import { Radio, Button, message, Drawer, List, Avatar, Modal, Select } from 'antd'
+const { Option } = Select
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.js';
 import 'codemirror/lib/codemirror.css';
@@ -46,7 +47,7 @@ import {
   auditionIMGCompare,
   getAuditionIMGCompare,
 } from '@/api/audition';
-import { getAuditionCssList } from '@/api/manage';
+import { getAuditionCssList, getAuditionExerciseList, getAuditionExerciseDetail } from '@/api/manage';
 
 const BattleRank: React.FC = (props: any) => {
   const [rankList, setRankList] = useState([]);
@@ -105,6 +106,7 @@ const Audition: React.FC = (props: any) => {
   const [visible, setVisible] = useState(false);
   const [interviewStatus, setStatus] = useState('activeInterview');
   const [auditionList, setAuditionList] = useState<any[]>([]);
+  const [exciseList, setExciseList] = useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const iframeRef = useRef(null);
@@ -145,6 +147,7 @@ const Audition: React.FC = (props: any) => {
     // getImg();
     queryAuditionDetail();
     getCssList();
+    // getExciseList();
   }, []);
 
   useEffect(() => {
@@ -179,10 +182,23 @@ const Audition: React.FC = (props: any) => {
     getAuditionCssList({ auditionId: props.match.params.id }).then((res) => {
       let result = res.data.data || [];
       setAuditionList(result);
-      getImg(result[0].cssId);
-      queryDetail(result[0].cssId);
+      if(result.length > 0) {
+        getImg(result[0].cssId);
+        queryDetail(result[0].cssId);
+      }
+      getExciseList()
     });
   };
+  
+  const getExciseList = ()=> {
+    getAuditionExerciseList({
+      auditionId: props.match.params.id
+    }).then(res=> {
+      let list = [...auditionList, ...(res.data.data || [])]
+      setAuditionList(list)
+    })
+  }
+
   const getImg = (id: any) => {
     getImgDetail({ id }).then((res) => {
       setImgUrl(res.data.data.imgUrl);
@@ -192,6 +208,7 @@ const Audition: React.FC = (props: any) => {
 
   const createIframe = () => {
     const iframe = iframeRef.current;
+    console.log(iframeRef)
     if (iframe !== null) {
       const iframeDoc = (iframe as HTMLIFrameElement).contentDocument;
       iframeDoc?.open();
@@ -200,7 +217,6 @@ const Audition: React.FC = (props: any) => {
         ${codeValue}
       </body>
       `);
-
       iframeDoc?.close();
     }
   };
@@ -312,10 +328,25 @@ const Audition: React.FC = (props: any) => {
       //   okText:'提交',
       // });
       setCurrentIndex(currentIndex + 1);
-      getImg(auditionList[currentIndex + 1].cssId);
-      queryDetail(auditionList[currentIndex + 1].cssId);
+      if(auditionList[currentIndex + 1].cssId) {
+        getImg(auditionList[currentIndex + 1].cssId);
+        queryDetail(auditionList[currentIndex + 1].cssId);
+      }else {
+        queryPratiseDetail(auditionList[currentIndex + 1].id)
+      }
     }
   };
+
+  const queryPratiseDetail = (id: string)=> {
+    let params = {
+      id,
+      auditionId: props.match.params.id
+    }
+    getAuditionExerciseDetail(params).then(res=> {
+       
+    })
+  }
+
 
   const queryDetail = (id: any) => {
     getAuditionIMGCompare({
@@ -353,7 +384,14 @@ const Audition: React.FC = (props: any) => {
       <div className={styles.playLeft}>
         <div className={styles.title}>
           <span className={styles.textTit}>答案</span>
-          <span className={styles.textTit}>字符数:{codeValue.length}</span>
+          <div>
+            {/* <Select placeholder="选择代码类型" style={{ width: 150 }}>
+              <Option value="js">原生js</Option>
+              <Option value="vue">vue.js</Option>
+              <Option value="react">react.js</Option>
+            </Select> */}
+            <span className={styles.textTit}>字符数:{codeValue.length}</span>
+          </div>
         </div>
         <div className={styles.leftContent}>
           <CodeMirror

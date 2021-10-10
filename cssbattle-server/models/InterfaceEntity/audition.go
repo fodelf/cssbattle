@@ -4,9 +4,15 @@
  * @Author: 吴文周
  * @Date: 2021-10-06 22:05:22
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-07 20:09:51
+ * @LastEditTime: 2021-10-10 18:12:57
  */
 package InterfaceEntity
+
+type BaseInfo struct {
+	Id         string `json:"id" bson:"_id"`
+	CreateTime string `json:"createTime"`
+	ModifyTime string `json:"modifyTime"`
+}
 
 //面试实体
 type AuditionInfo struct {
@@ -66,4 +72,50 @@ type AuditionImgDeatileInfo struct {
 	AuditionId string `json:"auditionId"`
 	Id         string `json:"id"`
 	UserId     string `json:"userId"`
+}
+type AuditionCssRequestInfo struct {
+	Id         string `json:"id"`
+	AuditionId string `json:"auditionId"`
+}
+
+type ExerciseInfo struct {
+	Id         string                   `json:"id" bson:"_id"`
+	CreateTime string                   `json:"createTime"`
+	ModifyTime string                   `json:"modifyTime"`
+	Name       string                   `json:"name"`
+	Type       int                      `json:"type"`
+	Content    string                   `json:"content"`
+	Options    []map[string]interface{} `json:"options"`
+	Answer     []string                 `json:"answer"`
+	Describe   string                   `json:"describe"`
+	UserId     string                   `json:"userId"`
+	AuditionId string                   `json:"auditionId"`
+}
+type ExerciseUserInfo struct {
+	Id         string                   `json:"id" bson:"_id"`
+	CreateTime string                   `json:"createTime"`
+	ModifyTime string                   `json:"modifyTime"`
+	Name       string                   `json:"name"`
+	Type       int                      `json:"type"`
+	Content    string                   `json:"content"`
+	Options    []map[string]interface{} `json:"options"`
+	Answer     []string                 `json:"answer"`
+	Describe   string                   `json:"describe"`
+	UserId     string                   `json:"userId"`
+}
+type AuditionIdExerciseList struct {
+	AuditionId     string   `json:"auditionId"`
+	ExerciseIdList []string `json:"exerciseIdList"`
+}
+type AuditionRInfo struct {
+	Id string `json:"id"`
+}
+type ExerciseResult struct {
+	Name       string   `json:"name"`
+	ExerciseId string   `json:"exerciseId"`
+	UserId     string   `json:"userId"`
+	Answer     []string `json:"answer"`
+	IsRight    bool     `json:"isRight"`
+	AuditionId string   `json:"auditionId"`
+	Type       int      `json:"type"`
 }

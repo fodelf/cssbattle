@@ -4,11 +4,12 @@
  * @Author: 吴文周
  * @Date: 2021-10-07 21:50:26
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-07 21:54:17
+ * @LastEditTime: 2021-10-10 12:20:01
  */
 package auth
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/fodelf/cssbattle/database"
@@ -23,7 +24,9 @@ import (
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		Token := c.GetHeader("Token")
-		if Token != "null" {
+		fmt.Println("Token", Token)
+		if Token != "" {
+			fmt.Println("sdsdsd")
 			appG := app.Gin{C: c}
 			filter := bson.D{{"token", Token}}
 			mg := database.NewMgo("token")
@@ -31,9 +34,12 @@ func Auth() gin.HandlerFunc {
 			err := database.FindOne(mg, filter).Decode(&tokenInfo)
 			if err == mongo.ErrNoDocuments {
 				appG.Response(http.StatusUnauthorized, e.INVALID_AUTH, nil)
+				c.Abort()
 			} else {
 				c.Next()
 			}
+		} else {
+			c.Next()
 		}
 	}
 }
