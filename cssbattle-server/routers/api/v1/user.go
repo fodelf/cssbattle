@@ -39,10 +39,14 @@ func Login(c *gin.Context) {
 	fmt.Println("user", user)
 	token, _ := jwt.GenerateToken(user)
 	if err == mongo.ErrNoDocuments {
-		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
+		appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
+			"login": false,
+		})
 	} else if err != nil {
 		log.Fatal(err)
-		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
+		appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
+			"login": false,
+		})
 	} else {
 		mg := database.NewMgo("token")
 		var tokenInfo InterfaceEntity.TokenInfo
@@ -50,9 +54,12 @@ func Login(c *gin.Context) {
 		tokenInfo.ExpireDate = time.Now()
 		_, err := database.InsertOne(mg, tokenInfo)
 		if err != nil {
-			appG.Response(http.StatusInternalServerError, e.ERROR, nil)
+			appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
+				"login": false,
+			})
 		} else {
 			appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
+				"login": true,
 				"token": token,
 			})
 		}

@@ -1,34 +1,34 @@
 /*
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: pym
  * @Date: 2021-09-05 10:38:23
- * @LastEditors: pym
- * @LastEditTime: 2021-10-07 18:34:16
+ * @LastEditors: 吴文周
+ * @LastEditTime: 2021-10-09 21:56:36
  */
-const routes =  [
-  { 
-    path: '/index', 
+const routes = [
+  {
+    path: '/index',
     component: '@/layouts/index',
     routes: [
       {
-        path: '/index', 
+        path: '/index',
         component: '@/pages/home/index',
       },
-      { 
-        path: '/index/learn', 
+      {
+        path: '/index/learn',
         component: '@/pages/learn/index',
       },
-      { 
-        path: '/index/play/:id', 
+      {
+        path: '/index/play/:id',
         component: '@/pages/play/index',
       },
       {
-        path: '/index/login', 
+        path: '/index/login',
         component: '@/pages/login/index',
       },
-      { 
-        path: '/index/manage', 
+      {
+        path: '/index/manage',
         component: '@/pages/manage/list',
         // redirect:'/index/manage/cssManage',
       },
@@ -38,7 +38,7 @@ const routes =  [
         routes: [
           {
             path: 'cssManage',
-            component: '@/pages/manage/children/cssManage/index'
+            component: '@/pages/manage/children/cssManage/index',
           },
           {
             path: 'pratiseManage',
@@ -47,20 +47,20 @@ const routes =  [
           {
             path: 'addPratise',
             component: '@/pages/manage/children/addPratise/index',
-          }
-        ]
+          },
+        ],
       },
-      { 
-        path: '/index/audition/:id', 
+      {
+        path: '/index/audition/:id',
         component: '@/pages/audition/index',
       },
-    ]
+    ],
   },
   {
     path: '/',
-    redirect: '/index'
-  }
+    redirect: '/index',
+  },
   // { path: '/user', component: '@/pages/user/index' },
-]
+];
 
-export default routes
+export default routes;
