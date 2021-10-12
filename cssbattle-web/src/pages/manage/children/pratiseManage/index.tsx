@@ -1,16 +1,21 @@
 /*
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: pym
  * @Date: 2021-10-05 17:08:11
- * @LastEditors: pym
- * @LastEditTime: 2021-10-10 19:59:16
+ * @LastEditors: 吴文周
+ * @LastEditTime: 2021-10-11 09:01:10
  */
-import { useEffect, useState } from 'react'
-import { Button, Table, Popconfirm, Modal, message } from 'antd'
-import { history } from 'umi'
-import { getAuditionExerciseList, getExerciseList, deleteExercise, createExerciseByLib } from '@/api/manage'
-import styles from '../../index.less' 
+import { useEffect, useState } from 'react';
+import { Button, Table, Popconfirm, Modal, message } from 'antd';
+import { history } from 'umi';
+import {
+  getAuditionExerciseList,
+  getExerciseList,
+  deleteExercise,
+  createExerciseByLib,
+} from '@/api/manage';
+import styles from '../../index.less';
 
 interface DataType {
   key: React.Key;
@@ -19,10 +24,10 @@ interface DataType {
   address: string;
 }
 
-const PratiseManage: React.FC = (props: any)=> {
+const PratiseManage: React.FC = (props: any) => {
   const columns = [
     {
-      title: '习题名称',
+      title: '题目名称',
       dataIndex: 'name',
     },
     {
@@ -40,132 +45,145 @@ const PratiseManage: React.FC = (props: any)=> {
       render: (text: any, record: any, index: number) => {
         return (
           <>
-            <span onClick={()=>goToDetail(record)}>编辑</span>
+            <span onClick={() => goToDetail(record)}>编辑</span>
             <Popconfirm
               title="是否确定删除?"
-              onConfirm={()=>deletePratise(record)}
+              onConfirm={() => deletePratise(record)}
               okText="确定"
               cancelText="取消"
             >
               <span>删除</span>
             </Popconfirm>
           </>
-        )
-         
+        );
       },
-    }
-  ]
+    },
+  ];
 
-  const [pratiseList, setPratiseList] = useState<DataType[]>([])
-  const [exciseVisible, setExciseVisible] = useState(false)
-  const [selectedRowKeys, setSelected] = useState<any[]>([])
-  const [allExciseList, setAllExciseList] = useState<any[]>([])
+  const [pratiseList, setPratiseList] = useState<DataType[]>([]);
+  const [exciseVisible, setExciseVisible] = useState(false);
+  const [selectedRowKeys, setSelected] = useState<any[]>([]);
+  const [allExciseList, setAllExciseList] = useState<any[]>([]);
 
-  useEffect(()=> {
-    queryExciseList()
-    queryAllExcise()
-  },[])
+  useEffect(() => {
+    queryExciseList();
+    queryAllExcise();
+  }, []);
 
-  const addPratise = ()=> {
-    history.push(`/index/detail/${props.match.params.id}/addPratise`)
-  }
+  const addPratise = () => {
+    history.push(`/index/detail/${props.match.params.id}/addPratise`);
+  };
 
-  const goToDetail = (item: any)=> {
-    history.push(`/index/detail/${props.match.params.id}/addPratise?pratiseId=${item.id}`)
-  }
+  const goToDetail = (item: any) => {
+    history.push(
+      `/index/detail/${props.match.params.id}/addPratise?pratiseId=${item.id}`,
+    );
+  };
 
-  const deletePratise = (item: any)=> {
+  const deletePratise = (item: any) => {
     deleteExercise({
       id: item.id,
-      auditionId: props.match.params.id
-    }).then(res=> {
-      message.success('删除成功')
-      queryExciseList()
-    })
-  }
+      auditionId: props.match.params.id,
+    }).then((res) => {
+      message.success('删除成功');
+      queryExciseList();
+    });
+  };
 
   const queryExciseList = () => {
     getAuditionExerciseList({
-      auditionId: props.match.params.id
-    }).then(res=> {
-      setPratiseList(res.data.data || [])
-    })
-  }
+      auditionId: props.match.params.id,
+    }).then((res) => {
+      setPratiseList(res.data.data || []);
+    });
+  };
 
-  const queryAllExcise = ()=> {
-    getExerciseList().then(res=> {
-      setAllExciseList(res.data.data || [])
-    })
-  }
+  const queryAllExcise = () => {
+    getExerciseList().then((res) => {
+      setAllExciseList(res.data.data || []);
+    });
+  };
 
-  const changeSelected = (selectedRowKeys: any, selectedRows: any)=>{
-    setSelected(selectedRowKeys)
-  }
+  const changeSelected = (selectedRowKeys: any, selectedRows: any) => {
+    setSelected(selectedRowKeys);
+  };
 
-  const submitExcise = ()=> {
+  const submitExcise = () => {
     let params = {
       exerciseIdList: selectedRowKeys,
-      auditionId: props.match.params.id
-    }
-    createExerciseByLib(params).then(res=> {
-      message.success('添加习题成功')
-      setExciseVisible(false)
-      queryExciseList()
-    })
-  }
+      auditionId: props.match.params.id,
+    };
+    createExerciseByLib(params).then((res) => {
+      message.success('添加题目成功');
+      setExciseVisible(false);
+      queryExciseList();
+    });
+  };
 
   const rowSelection = {
     selectedRowKeys,
     onChange: changeSelected,
     getCheckboxProps: (record: any) => ({
-      disabled: allExciseList.some((item:any)=>item.id == record.key)
+      disabled: allExciseList.some((item: any) => item.id == record.key),
     }),
   };
 
   const exciseColumns = [
     {
-      title: '习题名称',
+      title: '题目名称',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
     },
     {
       title: '描述',
       dataIndex: 'describe',
-      key: 'describe'
+      key: 'describe',
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
-      key: 'createTime'
+      key: 'createTime',
     },
-  ]
+  ];
 
   return (
     <div>
       <div className={styles.topBtn}>
-        <Button type='primary' onClick={addPratise}>自定义习题</Button>
-        <Button type='primary' onClick={()=> setExciseVisible(true)}>从习题库中选择</Button>
+        <Button type="primary" onClick={addPratise}>
+          自定义题目
+        </Button>
+        <Button type="primary" onClick={() => setExciseVisible(true)}>
+          从题目库中选择
+        </Button>
       </div>
       <Table
         bordered
         columns={columns}
         dataSource={pratiseList}
         pagination={false}
-        locale={{emptyText: '暂无数据'}}
+        locale={{ emptyText: '暂无数据' }}
       />
-      <Modal title="选择习题" width={800} visible={exciseVisible} onOk={submitExcise} onCancel={()=>setExciseVisible(false)} okText="确认" cancelText="取消">
+      <Modal
+        title="选择题目"
+        width={800}
+        visible={exciseVisible}
+        onOk={submitExcise}
+        onCancel={() => setExciseVisible(false)}
+        okText="确认"
+        cancelText="取消"
+      >
         <Table
           rowSelection={rowSelection}
           columns={exciseColumns}
           dataSource={allExciseList}
           pagination={false}
-          rowKey={record=>record.id}
+          rowKey={(record) => record.id}
           scroll={{ y: 700 }}
-          locale={{emptyText: '暂无数据'}}
+          locale={{ emptyText: '暂无数据' }}
         />
       </Modal>
     </div>
-  )
- }
+  );
+};
 
- export default PratiseManage
+export default PratiseManage;

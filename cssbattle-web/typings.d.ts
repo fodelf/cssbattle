@@ -11,6 +11,12 @@ declare module '*.svg' {
 interface Lsp {
   new (options: any): Lsp;
   connect: Function;
+  join: Function;
+  send: Function;
+  on: Function;
+  shareScreen: Function;
+  publishVideo: Function;
+  peerClient: any;
 }
 interface Window {
   Lsp: Lsp;

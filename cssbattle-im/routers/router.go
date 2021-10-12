@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-02 10:36:35
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-07 20:29:55
+ * @LastEditTime: 2021-10-11 20:36:06
  */
 package router
 
@@ -105,6 +105,8 @@ func Chat(writer http.ResponseWriter, request *http.Request) {
 	roomId := query.Get("roomId")
 	fmt.Println("userId", userId)
 	fmt.Println("roomId", roomId)
+	writer.Header().Set("Access-Control-Allow-Origin", "*")
+	writer.Header().Add("Access-Control-Allow-Headers", "Content-Type")
 	// token := query.Get("token")
 	// userId, _ := strconv.ParseInt(id, 10, 64)
 	//校验token是否合法

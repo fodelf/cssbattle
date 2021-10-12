@@ -29,3 +29,4 @@ yarn-error.log*
 cssbattle
 sql.go
 conf
+/Nginx/

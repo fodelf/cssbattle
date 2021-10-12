@@ -3,13 +3,23 @@
  * @version:
  * @Author: pym
  * @Date: 2021-08-28 11:49:43
- * @LastEditors: pym
- * @LastEditTime: 2021-10-10 21:13:28
+ * @LastEditors: 吴文周
+ * @LastEditTime: 2021-10-12 13:25:07
  */
 import { useCallback, useState, useRef, useEffect } from 'react';
 import styles from './index.less';
-import { Radio, Button, message, Drawer, List, Avatar, Modal, Select } from 'antd'
-const { Option } = Select
+import {
+  Radio,
+  Button,
+  message,
+  Drawer,
+  List,
+  Avatar,
+  Modal,
+  Select,
+  Divider,
+} from 'antd';
+const { Option } = Select;
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.js';
 import 'codemirror/lib/codemirror.css';
@@ -47,7 +57,11 @@ import {
   auditionIMGCompare,
   getAuditionIMGCompare,
 } from '@/api/audition';
-import { getAuditionCssList, getAuditionExerciseList, getAuditionExerciseDetail } from '@/api/manage';
+import {
+  getAuditionCssList,
+  getAuditionExerciseList,
+  getAuditionExerciseDetail,
+} from '@/api/manage';
 
 const BattleRank: React.FC = (props: any) => {
   const [rankList, setRankList] = useState([]);
@@ -117,18 +131,84 @@ const Audition: React.FC = (props: any) => {
   const changeCode = (editor: any, data: any, value: string) => {
     setValue(value);
   };
+  function randomString(e: number): string {
+    e = e || 32;
+    var t = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678',
+      a = t.length,
+      n = '';
+    for (let i = 0; i < e; i++) n += t.charAt(Math.floor(Math.random() * a));
+    return n;
+  }
   const initIm = async () => {
-    const options = {
-      stream: null,
-      serverUrl: `ws://110.42.220.32:9528/api/v1/im/message`,
-      roomId: props.match.params.id,
-      userId: localStorage.getItem('userId'),
-      debug: true,
-    };
-    const spw = new window.Lsp(options);
+    if (!localStorage.getItem('userId')) {
+      localStorage.setItem('userId', randomString(12));
+    }
 
-    // Make the peer connection
-    const dd = await spw.connect();
+    navigator.mediaDevices
+      .getUserMedia({
+        video: true,
+        audio: true,
+      })
+      .then(async (stream) => {
+        const video = document.getElementById('1');
+        //@ts-ignore
+        video.srcObject = stream;
+        //@ts-ignore
+        video.play();
+        const options = {
+          stream,
+          serverUrl: `ws:110.42.220.32:9528/api/v1/im/message`,
+          joinUrl: 'http://110.42.220.32:9528',
+          // serverUrl: `ws:localhost:9528/api/v1/im/message`,
+          // joinUrl: 'http://127.0.0.1:9528',
+          roomId: props.match.params.id,
+          userId: localStorage.getItem('userId'),
+          debug: true,
+          peerOptions: {
+            config: {
+              iceServers: [
+                {
+                  urls: 'turn:110.42.220.32:3478',
+                  username: 'admin',
+                  credential: '123456',
+                },
+              ],
+            },
+          },
+        };
+        const spw = new window.Lsp(options);
+        spw.join(props.match.params.id);
+        await spw.connect();
+        spw.send({
+          message: location.href,
+        });
+
+        spw.on('message', ({ content }) => {
+          // alert(content.message);
+        });
+        spw.on('stream', (videoStream: any) => {
+          console.log('sssssssssssssssssssssssssssssss', videoStream);
+          const video = document.getElementById('2');
+          //@ts-ignore
+          video.srcObject = videoStream;
+          //@ts-ignore
+          video.play();
+          // spw.publishVideo();
+          // connectToNewUser(user, videoStream);
+        });
+      })
+      .catch(() => {});
+
+    // spw.publishVideo('1').then(async (stream: any) => {
+    //   // let video = document.getElementById('1') as any;
+    //   // debugger;
+    //   // video.srcObject = stream;
+    //   // console.log('=======videovideo=====', stream);
+    //   // spw.peerClient.addStream(stream.videoStream);
+    // });
+    // spw.shareScreen().then(async (stream: any) => {
+    //   console.log('=======videovideo=====', stream);
+    // });
   };
   useEffect(() => {
     // changeStyle();
@@ -182,22 +262,22 @@ const Audition: React.FC = (props: any) => {
     getAuditionCssList({ auditionId: props.match.params.id }).then((res) => {
       let result = res.data.data || [];
       setAuditionList(result);
-      if(result.length > 0) {
+      if (result.length > 0) {
         getImg(result[0].cssId);
         queryDetail(result[0].cssId);
       }
-      getExciseList()
+      getExciseList();
     });
   };
-  
-  const getExciseList = ()=> {
+
+  const getExciseList = () => {
     getAuditionExerciseList({
-      auditionId: props.match.params.id
-    }).then(res=> {
-      let list = [...auditionList, ...(res.data.data || [])]
-      setAuditionList(list)
-    })
-  }
+      auditionId: props.match.params.id,
+    }).then((res) => {
+      let list = [...auditionList, ...(res.data.data || [])];
+      setAuditionList(list);
+    });
+  };
 
   const getImg = (id: any) => {
     getImgDetail({ id }).then((res) => {
@@ -208,7 +288,7 @@ const Audition: React.FC = (props: any) => {
 
   const createIframe = () => {
     const iframe = iframeRef.current;
-    console.log(iframeRef)
+    console.log(iframeRef);
     if (iframe !== null) {
       const iframeDoc = (iframe as HTMLIFrameElement).contentDocument;
       iframeDoc?.open();
@@ -328,25 +408,24 @@ const Audition: React.FC = (props: any) => {
       //   okText:'提交',
       // });
       setCurrentIndex(currentIndex + 1);
-      if(auditionList[currentIndex + 1].cssId) {
+      if (auditionList[currentIndex + 1].cssId) {
         getImg(auditionList[currentIndex + 1].cssId);
         queryDetail(auditionList[currentIndex + 1].cssId);
-      }else {
-        queryPratiseDetail(auditionList[currentIndex + 1].id)
+      } else {
+        queryPratiseDetail(auditionList[currentIndex + 1].id);
       }
+    } else {
+      // message.warning('已经是最后一题！');
     }
   };
 
-  const queryPratiseDetail = (id: string)=> {
+  const queryPratiseDetail = (id: string) => {
     let params = {
       id,
-      auditionId: props.match.params.id
-    }
-    getAuditionExerciseDetail(params).then(res=> {
-       
-    })
-  }
-
+      auditionId: props.match.params.id,
+    };
+    getAuditionExerciseDetail(params).then((res) => {});
+  };
 
   const queryDetail = (id: any) => {
     getAuditionIMGCompare({
@@ -376,6 +455,8 @@ const Audition: React.FC = (props: any) => {
       getImg(auditionList[currentIndex - 1].cssId);
       setCurrentIndex(currentIndex - 1);
       queryDetail(auditionList[currentIndex - 1].cssId);
+    } else {
+      // message.warning('已经是第一题！');
     }
   };
 
@@ -494,8 +575,11 @@ const Audition: React.FC = (props: any) => {
           <span className={styles.textTit}>视频</span>
         </div>
         <div className={styles.rightContent}>
-          <div className={styles.imgBg}></div>
-          <div className={styles.imgBg}></div>
+          <video className={styles.videoContent} id="1"></video>
+          <Divider />
+          <video className={styles.videoContent} id="2"></video>
+          {/* <div className={styles.imgBg}></div>
+          <div className={styles.imgBg}></div> */}
         </div>
       </div>
     </div>

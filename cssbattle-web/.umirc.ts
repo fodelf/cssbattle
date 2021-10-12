@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:39:09
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-08 13:02:29
+ * @LastEditTime: 2021-10-12 07:25:06
  */
 import { defineConfig } from 'umi';
 import routes from './src/router/index';
@@ -26,7 +26,7 @@ export default defineConfig({
       rel: 'icon',
       href:
         process.env.NODE_ENV === 'production'
-          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.11/'
+          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.12/'
           : '/favicon.ico',
     },
   ],
@@ -37,7 +37,7 @@ export default defineConfig({
   fastRefresh: {},
   publicPath:
     process.env.NODE_ENV === 'production'
-      ? 'https://cdn.wuwenzhou.com.cn/web/0.0.11/'
+      ? 'https://cdn.wuwenzhou.com.cn/web/0.0.12/'
       : '/',
   proxy: {
     '/api': {
@@ -46,4 +46,10 @@ export default defineConfig({
       changeOrigin: true,
     },
   },
+  // devServer: {
+  //   https: {
+  //     key: './Nginx/2_cssbattle.wuwenzhou.com.cn/web/0.0.12/',
+  //     cert: './Nginx/1_cssbattle.wuwenzhou.com.cn/web/0.0.12/',
+  //   },
+  // },
 });

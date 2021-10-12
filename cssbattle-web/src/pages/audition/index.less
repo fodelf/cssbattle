@@ -43,7 +43,8 @@
         }
       }
     }
-    .confirmCodeBtn, .btnList {
+    .confirmCodeBtn,
+    .btnList {
       z-index: 100;
       position: absolute;
       right: 20px;
@@ -65,6 +66,16 @@
       box-sizing: border-box;
       border-left: 1px #27313a solid;
       overflow-y: auto;
+      .videoContent {
+        width: 400px;
+        height: 300px;
+        object-fit: fill;
+      }
+      :global {
+        .ant-divider {
+          background: #323f4a;
+        }
+      }
     }
     :global {
       .ant-radio-group {
@@ -113,14 +124,14 @@
     }
     .scoreTit {
       color: #fff;
-      font-size:20px;
-      line-height:40px;
-      padding:10px 0;
-      margin-bottom:0;
-      display:flex;
+      font-size: 20px;
+      line-height: 40px;
+      padding: 10px 0;
+      margin-bottom: 0;
+      display: flex;
       &:after {
         content: '';
-        flex:1;
+        flex: 1;
         height: 1px;
         background: #323f4a;
         margin-top: 20px;

@@ -28,6 +28,8 @@ func IsContain(items []string, item string) bool {
 // @Tags  用户模块
 // @Router /api/v1/im/join [post]
 func Join(writer http.ResponseWriter, request *http.Request) {
+	writer.Header().Set("Access-Control-Allow-Origin", "*")
+	writer.Header().Add("Access-Control-Allow-Headers", "Content-Type")
 	// 根据请求body创建一个json解析器实例
 	decoder := json.NewDecoder(request.Body)
 	// 用于存放参数key=value数据
