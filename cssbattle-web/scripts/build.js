@@ -66,8 +66,12 @@ async function updateConfig() {
   const pkgPath = path.resolve(__dirname, '../package.json');
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
   data = data.replace(
-    /(\wuwenzhou.*?\')/g,
-    `wuwenzhou.com.cn/web/${pkg.version}/'`,
+    /(\wuwenzhou.*?\/lsp.js')/g,
+    `wuwenzhou.com.cn/web/${pkg.version}/lsp.js'`,
+  );
+  data = data.replace(
+    /(\wuwenzhou.*?\/favicon.ico')/g,
+    `wuwenzhou.com.cn/web/${pkg.version}/favicon.ico'`,
   );
   fs.writeFileSync(jsPath, data);
   console.log(chalk.green(`修改配置文件完成`));
