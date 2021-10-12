@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:49:43
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-12 13:25:07
+ * @LastEditTime: 2021-10-13 05:54:57
  */
 import { useCallback, useState, useRef, useEffect } from 'react';
 import styles from './index.less';
@@ -157,8 +157,8 @@ const Audition: React.FC = (props: any) => {
         video.play();
         const options = {
           stream,
-          serverUrl: `ws:110.42.220.32:9528/api/v1/im/message`,
-          joinUrl: 'http://110.42.220.32:9528',
+          serverUrl: `wss://cssbattle.wuwenzhou.com.cn:9529/api/v1/im/message`,
+          joinUrl: 'https://cssbattle.wuwenzhou.com.cn:9529',
           // serverUrl: `ws:localhost:9528/api/v1/im/message`,
           // joinUrl: 'http://127.0.0.1:9528',
           roomId: props.match.params.id,
