@@ -32,7 +32,7 @@ async function buildDocker() {
     console.error(error);
   }
   await run('docker', ['build', '-t', 'fodelf/cssbattleweb', '.']);
-  await run('docker', ['push', 'fodelf/cssbattleweb']);
+  // await run('docker', ['push', 'fodelf/cssbattleweb']);
 }
 
 async function buildPackage() {
