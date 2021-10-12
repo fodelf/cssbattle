@@ -17,12 +17,12 @@ async function main() {
   step('\nBuildPackage...');
   await buildPackage();
   console.log(chalk.green(`静态资源构建完成`));
-  // step('\nUploadOss...');
-  // await uploadOss();
-  // console.log(chalk.green(`oss 上传成功`));
-  // step('\nbuildDocker...');
-  // await buildDocker();
-  // console.log(chalk.green(`docker 发布成功`));
+  step('\nUploadOss...');
+  await uploadOss();
+  console.log(chalk.green(`oss 上传成功`));
+  step('\nbuildDocker...');
+  await buildDocker();
+  console.log(chalk.green(`docker 发布成功`));
 }
 
 async function buildDocker() {
@@ -72,6 +72,10 @@ async function updateConfig() {
   data = data.replace(
     /(\wuwenzhou.*?\/favicon.ico')/g,
     `wuwenzhou.com.cn/web/${pkg.version}/favicon.ico'`,
+  );
+  data = data.replace(
+    /(\wuwenzhou.*?\/')/g,
+    `wuwenzhou.com.cn/web/${pkg.version}/'`,
   );
   fs.writeFileSync(jsPath, data);
   console.log(chalk.green(`修改配置文件完成`));

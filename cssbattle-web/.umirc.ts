@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:39:09
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-12 21:03:44
+ * @LastEditTime: 2021-10-12 21:24:02
  */
 import { defineConfig } from 'umi';
 import routes from './src/router/index';
@@ -22,7 +22,7 @@ export default defineConfig({
     {
       src:
         process.env.NODE_ENV === 'production'
-          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.15/lsp.js'
+          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.16/lsp.js'
           : '/lsp.js',
     },
   ],
@@ -31,7 +31,7 @@ export default defineConfig({
       rel: 'icon',
       href:
         process.env.NODE_ENV === 'production'
-          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.15/favicon.ico'
+          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.16/favicon.ico'
           : '/favicon.ico',
     },
   ],
@@ -42,7 +42,7 @@ export default defineConfig({
   fastRefresh: {},
   publicPath:
     process.env.NODE_ENV === 'production'
-      ? 'https://cdn.wuwenzhou.com.cn/web/0.0.13/'
+      ? 'https://cdn.wuwenzhou.com.cn/web/0.0.16/'
       : '/',
   proxy: {
     '/api': {
@@ -53,8 +53,8 @@ export default defineConfig({
   },
   // devServer: {
   //   https: {
-  //     key: './Nginx/2_cssbattle.wuwenzhou.com.cn/web/0.0.13/',
-  //     cert: './Nginx/1_cssbattle.wuwenzhou.com.cn/web/0.0.13/',
+  //     key: './Nginx/2_cssbattle.wuwenzhou.com.cn/web/0.0.16/',
+  //     cert: './Nginx/1_cssbattle.wuwenzhou.com.cn/web/0.0.16/',
   //   },
   // },
 });
