@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:49:43
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-13 16:33:00
+ * @LastEditTime: 2021-10-13 16:42:33
  */
 import { useCallback, useState, useRef, useEffect } from 'react';
 import styles from './index.less';
@@ -164,17 +164,17 @@ const Audition: React.FC = (props: any) => {
           roomId: props.match.params.id,
           userId: localStorage.getItem('userId'),
           debug: true,
-          peerOptions: {
-            config: {
-              iceServers: [
-                {
-                  urls: 'turn:cssbattle.wuwenzhou.com.cn',
-                  username: 'admin',
-                  credential: '123456',
-                },
-              ],
-            },
-          },
+          // peerOptions: {
+          //   config: {
+          //     iceServers: [
+          //       {
+          //         urls: 'turn:cssbattle.wuwenzhou.com.cn',
+          //         username: 'admin',
+          //         credential: '123456',
+          //       },
+          //     ],
+          //   },
+          // },
         };
         const spw = new window.Lsp(options);
         spw.join(props.match.params.id);
