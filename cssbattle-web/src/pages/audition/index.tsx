@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:49:43
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-13 13:34:27
+ * @LastEditTime: 2021-10-13 16:25:01
  */
 import { useCallback, useState, useRef, useEffect } from 'react';
 import styles from './index.less';
@@ -170,7 +170,7 @@ const Audition: React.FC = (props: any) => {
                 {
                   urls: 'turn:cssbattle.wuwenzhou.com.cn',
                   username: 'admin',
-                  credential: '123456',
+                  password: '123456',
                 },
               ],
             },
@@ -187,6 +187,7 @@ const Audition: React.FC = (props: any) => {
           // alert(content.message);
         });
         spw.on('stream', (videoStream: any) => {
+          debugger;
           console.log('sssssssssssssssssssssssssssssss', videoStream);
           const video = document.getElementById('2');
           //@ts-ignore
