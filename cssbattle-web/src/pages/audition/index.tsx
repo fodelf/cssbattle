@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:49:43
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-13 05:54:57
+ * @LastEditTime: 2021-10-13 13:34:27
  */
 import { useCallback, useState, useRef, useEffect } from 'react';
 import styles from './index.less';
@@ -168,7 +168,7 @@ const Audition: React.FC = (props: any) => {
             config: {
               iceServers: [
                 {
-                  urls: 'turn:110.42.220.32:3478',
+                  urls: 'turn:cssbattle.wuwenzhou.com.cn',
                   username: 'admin',
                   credential: '123456',
                 },
