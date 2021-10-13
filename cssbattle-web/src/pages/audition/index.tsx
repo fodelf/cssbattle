@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:49:43
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-13 16:25:01
+ * @LastEditTime: 2021-10-13 16:33:00
  */
 import { useCallback, useState, useRef, useEffect } from 'react';
 import styles from './index.less';
@@ -170,7 +170,7 @@ const Audition: React.FC = (props: any) => {
                 {
                   urls: 'turn:cssbattle.wuwenzhou.com.cn',
                   username: 'admin',
-                  password: '123456',
+                  credential: '123456',
                 },
               ],
             },
