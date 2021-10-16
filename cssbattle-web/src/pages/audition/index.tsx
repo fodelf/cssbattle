@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:49:43
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-15 11:21:03
+ * @LastEditTime: 2021-10-16 14:58:18
  */
 import { useCallback, useState, useRef, useEffect } from 'react';
 import styles from './index.less';
@@ -182,9 +182,10 @@ const Audition: React.FC = (props: any) => {
         await spw.connect();
         spw.send({
           message: location.href,
+          userId: localStorage.getItem('userId'),
         });
-
-        spw.on('message', ({ content }) => {
+        spw.on('message', (content: any) => {
+          console.log(content);
           // alert(content.message);
         });
         spw.on('stream', (videoStream: any) => {
