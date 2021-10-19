@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-17 19:05:39
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-19 09:15:11
+ * @LastEditTime: 2021-10-19 13:02:06
  */
 type WebRtcOptions = {
   im: any;
@@ -27,6 +27,7 @@ class WebRtc {
       },
     };
     this.im.send(message);
+    console.log('初始化发送');
     this.im.on('message', async (mes: any) => {
       const content = mes.content.content;
       const sendId = mes.userId;

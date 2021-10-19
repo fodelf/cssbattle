@@ -33,6 +33,18 @@ class IM {
         console.log(err);
       });
     await this.initSocket();
+    this.Socket.onmessage = async (event: any) => {
+      const data = event.data;
+      console.log('接收消息', data);
+      // debugger;
+      for (let i = 0; i < this.callbackList.length; i++) {
+        let item = this.callbackList[i];
+        await item(JSON.parse(data));
+      }
+      // this.callbackList.forEach((item: any) => {
+      //   item(JSON.parse(data));
+      // });
+    };
   }
   private initSocket() {
     return new Promise((resolve, reject) => {
@@ -46,18 +58,6 @@ class IM {
       this.Socket.onerror = function () {
         console.log('链接失败');
         reject('error');
-      };
-      this.Socket.onmessage = async (event: any) => {
-        const data = event.data;
-        // console.log('接收消息', data);
-        // debugger;
-        for (let i = 0; i < this.callbackList.length; i++) {
-          let item = this.callbackList[i];
-          await item(JSON.parse(data));
-        }
-        // this.callbackList.forEach((item: any) => {
-        //   item(JSON.parse(data));
-        // });
       };
     });
   }

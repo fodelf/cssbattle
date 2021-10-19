@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:49:43
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-19 09:16:01
+ * @LastEditTime: 2021-10-19 13:01:04
  */
 import { useCallback, useState, useRef, useEffect } from 'react';
 import styles from './index.less';
@@ -172,6 +172,7 @@ const Audition: React.FC = (props: any) => {
         video.onloadedmetadata = function (e) {
           video.play();
         };
+        console.log('初始化rtc');
         const webRtc = new WebRtc({
           im: im,
           userId: localStorage.getItem('userId') as string,
