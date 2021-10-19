@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-02 10:18:56
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-12 22:39:01
+ * @LastEditTime: 2021-10-16 17:44:09
  */
 package main
 
@@ -55,11 +55,11 @@ func main() {
 	// 		ClientAuth:               tls.RequireAndVerifyClientCert,
 	// 	},
 	// }
-	http.ListenAndServeTLS(port, "./Nginx/cert.pem",
-		"./Nginx/key.pem", nil)
+	// http.ListenAndServeTLS(port, "./Nginx/cert.pem",
+	// 	"./Nginx/key.pem", nil)
 	// err := srv.ListenAndServeTLS("./Nginx/1_cssbattle.wuwenzhou.com.cn_bundle.crt", "./Nginx/2_cssbattle.wuwenzhou.com.cn.key")
 	// log.Fatal(err)
-	// http.ListenAndServe(port, nil)
+	http.ListenAndServe(port, nil)
 	// http.ListenAndServeTLS(port, "./Nginx/1_cssbattle.wuwenzhou.com.cn_bundle.crt", "./Nginx/2_cssbattle.wuwenzhou.com.cn.key", nil)
 	//  router := routers.InitRouter()
 	//  router.Run(port)

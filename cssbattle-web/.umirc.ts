@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:39:09
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-12 21:24:02
+ * @LastEditTime: 2021-10-16 17:43:38
  */
 import { defineConfig } from 'umi';
 import routes from './src/router/index';
@@ -22,7 +22,7 @@ export default defineConfig({
     {
       src:
         process.env.NODE_ENV === 'production'
-          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.27/lsp.js'
+          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.28/lsp.js'
           : '/lsp.js',
     },
   ],
@@ -31,7 +31,7 @@ export default defineConfig({
       rel: 'icon',
       href:
         process.env.NODE_ENV === 'production'
-          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.27/favicon.ico'
+          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.28/favicon.ico'
           : '/favicon.ico',
     },
   ],
@@ -42,19 +42,19 @@ export default defineConfig({
   fastRefresh: {},
   publicPath:
     process.env.NODE_ENV === 'production'
-      ? 'https://cdn.wuwenzhou.com.cn/web/0.0.27/'
+      ? 'https://cdn.wuwenzhou.com.cn/web/0.0.28/'
       : '/',
   proxy: {
     '/api': {
-      target: 'http://127.0.0.1:9527/', //代理的地址
+      target: 'http://110.42.220.32:9527/', //代理的地址
       // pathRewrite: { '^/api': '' },
       changeOrigin: true,
     },
   },
   // devServer: {
   //   https: {
-  //     key: './Nginx/2_cssbattle.wuwenzhou.com.cn/web/0.0.27/',
-  //     cert: './Nginx/1_cssbattle.wuwenzhou.com.cn/web/0.0.27/',
+  //     key: './Nginx/2_cssbattle.wuwenzhou.com.cn/web/0.0.28/',
+  //     cert: './Nginx/1_cssbattle.wuwenzhou.com.cn/web/0.0.28/',
   //   },
   // },
 });

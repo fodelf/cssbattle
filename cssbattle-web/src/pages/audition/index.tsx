@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:49:43
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-16 14:58:18
+ * @LastEditTime: 2021-10-19 09:16:01
  */
 import { useCallback, useState, useRef, useEffect } from 'react';
 import styles from './index.less';
@@ -62,6 +62,8 @@ import {
   getAuditionExerciseList,
   getAuditionExerciseDetail,
 } from '@/api/manage';
+import IM from './im';
+import WebRtc from './webrtc';
 
 const BattleRank: React.FC = (props: any) => {
   const [rankList, setRankList] = useState([]);
@@ -127,7 +129,7 @@ const Audition: React.FC = (props: any) => {
   const iframeBoxRef = useRef(null);
   const draggleLineRef = useRef(null);
   const contentRef = useRef(null);
-
+  let im: any;
   const changeCode = (editor: any, data: any, value: string) => {
     setValue(value);
   };
@@ -143,75 +145,41 @@ const Audition: React.FC = (props: any) => {
     if (!localStorage.getItem('userId')) {
       localStorage.setItem('userId', randomString(12));
     }
-
+    im = new IM({
+      roomId: props.match.params.id,
+      userId: localStorage.getItem('userId') as string,
+    });
+    await im.init();
+    // im.send({
+    //   message: location.href,
+    // });
+    im.on('message', (content: any) => {
+      console.log('message', content);
+      // alert(content.message);
+    });
+    initWebRtc(im);
+  };
+  const initWebRtc = (im: any) => {
+    const constraints = {
+      audio: false,
+      video: true,
+    };
     navigator.mediaDevices
-      .getUserMedia({
-        video: true,
-        audio: true,
-      })
-      .then(async (stream) => {
-        const video = document.getElementById('1');
-        //@ts-ignore
+      .getUserMedia(constraints)
+      .then(function (stream) {
+        const video = document.getElementById('1') as HTMLVideoElement;
         video.srcObject = stream;
-        //@ts-ignore
-        video.play();
-        const options = {
-          stream,
-          serverUrl: `wss://cssbattle.wuwenzhou.com.cn:9529/api/v1/im/message`,
-          joinUrl: 'https://cssbattle.wuwenzhou.com.cn:9529',
-          // serverUrl: `ws:localhost:9528/api/v1/im/message`,
-          // joinUrl: 'http://127.0.0.1:9528',
-          roomId: props.match.params.id,
-          userId: localStorage.getItem('userId'),
-          debug: true,
-          peerOptions: {
-            config: {
-              iceServers: [
-                {
-                  urls: 'turn:110.42.220.32',
-                  username: 'admin',
-                  credential: '123456',
-                },
-              ],
-              iceTransportPolicy: 'relay',
-            },
-          },
-        };
-        const spw = new window.Lsp(options);
-        spw.join(props.match.params.id);
-        await spw.connect();
-        spw.send({
-          message: location.href,
-          userId: localStorage.getItem('userId'),
-        });
-        spw.on('message', (content: any) => {
-          console.log(content);
-          // alert(content.message);
-        });
-        spw.on('stream', (videoStream: any) => {
-          debugger;
-          console.log('sssssssssssssssssssssssssssssss', videoStream);
-          const video = document.getElementById('2');
-          //@ts-ignore
-          video.srcObject = videoStream;
-          //@ts-ignore
+        video.onloadedmetadata = function (e) {
           video.play();
-          // spw.publishVideo();
-          // connectToNewUser(user, videoStream);
+        };
+        const webRtc = new WebRtc({
+          im: im,
+          userId: localStorage.getItem('userId') as string,
         });
       })
-      .catch(() => {});
-
-    // spw.publishVideo('1').then(async (stream: any) => {
-    //   // let video = document.getElementById('1') as any;
-    //   // debugger;
-    //   // video.srcObject = stream;
-    //   // console.log('=======videovideo=====', stream);
-    //   // spw.peerClient.addStream(stream.videoStream);
-    // });
-    // spw.shareScreen().then(async (stream: any) => {
-    //   console.log('=======videovideo=====', stream);
-    // });
+      .catch(function (err) {
+        /* 处理error */
+      });
   };
   useEffect(() => {
     // changeStyle();

@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-02 10:36:35
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-11 20:36:06
+ * @LastEditTime: 2021-10-19 09:02:46
  */
 package router
 
@@ -68,15 +68,15 @@ func dispatch(data []byte) {
 		fmt.Println(ImInfo.UserList)
 		for _, v := range ImInfo.UserList {
 			if v != msg.UserId {
-				fmt.Println(v, "UserId--")
 				if _, ok := clientMap[v]; ok {
 					child := clientMap[v]
-					// child.DataQueue <- data
-					err := child.Conn.WriteMessage(websocket.TextMessage, data)
-					if err != nil {
-						log.Println(err.Error())
-						return
-					}
+					fmt.Println("child---------", child)
+					child.DataQueue <- data
+					// err = child.Conn.WriteMessage(websocket.TextMessage, data)
+					// if err != nil {
+					// 	log.Println(err.Error())
+					// 	return
+					// }
 				}
 			}
 		}
@@ -125,7 +125,7 @@ func Chat(writer http.ResponseWriter, request *http.Request) {
 	//获得websocket链接conn
 	node := &Node{
 		Conn:      conn,
-		DataQueue: make(chan []byte, 50),
+		DataQueue: make(chan []byte, 100),
 		GroupSets: set.New(set.ThreadSafe),
 		UserId:    userId,
 	}
@@ -150,11 +150,11 @@ func Chat(writer http.ResponseWriter, request *http.Request) {
 	// 	}
 	// }
 	//开启协程处理发送逻辑
-	// go sendproc(node)
+	go sendproc(node)
 
 	//开启协程完成接收逻辑
 	go recvproc(node)
-	fmt.Println("链接结束")
+	// fmt.Println("链接结束")
 	// sendMsg(userId, []byte("welcome!"))
 }
 
@@ -174,12 +174,22 @@ func sendproc(node *Node) {
 	for {
 		select {
 		case data := <-node.DataQueue:
-			fmt.Println("收到消息")
-			err := node.Conn.WriteMessage(websocket.TextMessage, data)
+			msg := Message{}
+			err := json.Unmarshal(data, &msg)
 			if err != nil {
 				log.Println(err.Error())
 				return
 			}
+			// fmt.Println("msg.UserId", msg.UserId)
+			// fmt.Println("node.UserId", node.UserId)
+			// if msg.UserId != node.UserId {
+			err = node.Conn.WriteMessage(websocket.TextMessage, data)
+			if err != nil {
+				log.Println(err.Error())
+				return
+				// }
+			}
+
 		}
 	}
 }
@@ -193,7 +203,8 @@ func recvproc(node *Node) {
 			log.Println(err.Error())
 			return
 		}
-
+		// node.Conn.WriteMessage(websocket.TextMessage, data)
+		// fmt.Printf("发送成功")
 		dispatch(data)
 		//todo对data进一步处理
 		// fmt.Printf("recv<=%s", data)
