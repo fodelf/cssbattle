@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-02 10:36:35
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-19 09:02:46
+ * @LastEditTime: 2021-10-19 14:18:51
  */
 package router
 
@@ -125,7 +125,7 @@ func Chat(writer http.ResponseWriter, request *http.Request) {
 	//获得websocket链接conn
 	node := &Node{
 		Conn:      conn,
-		DataQueue: make(chan []byte, 100),
+		DataQueue: make(chan []byte, 1000),
 		GroupSets: set.New(set.ThreadSafe),
 		UserId:    userId,
 	}
@@ -174,6 +174,7 @@ func sendproc(node *Node) {
 	for {
 		select {
 		case data := <-node.DataQueue:
+			fmt.Printf("发送消息")
 			msg := Message{}
 			err := json.Unmarshal(data, &msg)
 			if err != nil {
@@ -185,6 +186,7 @@ func sendproc(node *Node) {
 			// if msg.UserId != node.UserId {
 			err = node.Conn.WriteMessage(websocket.TextMessage, data)
 			if err != nil {
+				fmt.Printf("发送消息失败")
 				log.Println(err.Error())
 				return
 				// }

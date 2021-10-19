@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-17 19:05:39
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-19 13:02:06
+ * @LastEditTime: 2021-10-19 15:05:35
  */
 type WebRtcOptions = {
   im: any;
@@ -115,11 +115,13 @@ class WebRtc {
       },
       iceServers: [
         {
-          urls: 'turn:110.42.220.32:3478',
+          urls: ['turn:110.42.220.32:3478'],
           username: 'admin',
           credential: '123456',
         },
       ],
+      iceTransportPolicy: 'relay',
+      iceCandidatePoolSize: '0',
       // iceTransportPolicy: 're',
     } as any;
     const pc = new RTCPeerConnection(config) as any;
@@ -138,28 +140,28 @@ class WebRtc {
         this.im.send(mes);
       }
     };
-    // pc.onnegotiationneeded = (e: any) => {
-    //   console.log('onnegotiationneeded', e);
-    // };
-    // pc.onicegatheringstatechange = (e: any) => {
-    //   console.log('onicegatheringstatechange', e);
-    // };
-    // pc.oniceconnectionstatechange = (e: any) => {
-    //   console.log('oniceconnectionstatechange', e);
-    // };
-    // pc.onsignalingstatechange = (e: any) => {
-    //   console.log('onsignalingstatechange', e);
-    // };
-    // pc.ontrack = (e: any) => {
-    // console.log('ontrack', e);
-    // const video = document.getElementById('2') as HTMLVideoElement;
-    // debugger;
-    // video.srcObject = e.streams[0];
-    // video.play();
-    // video.onloadedmetadata = (e) => {
-    //   video.play();
-    // };
-    // };
+    pc.onnegotiationneeded = (e: any) => {
+      console.log('onnegotiationneeded', e);
+    };
+    pc.onicegatheringstatechange = (e: any) => {
+      console.log('onicegatheringstatechange', e);
+    };
+    pc.oniceconnectionstatechange = (e: any) => {
+      console.log('oniceconnectionstatechange', e);
+    };
+    pc.onsignalingstatechange = (e: any) => {
+      console.log('onsignalingstatechange', e);
+    };
+    pc.ontrack = (e: any) => {
+      console.log('ontrack', e);
+      // const video = document.getElementById('2') as HTMLVideoElement;
+      // debugger;
+      // video.srcObject = e.streams[0];
+      // video.play();
+      // video.onloadedmetadata = (e) => {
+      //   video.play();
+      // };
+    };
 
     pc.onaddstream = (e: any) => {
       console.log('渲染视频', e);
