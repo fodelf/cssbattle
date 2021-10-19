@@ -13,7 +13,7 @@ class IM {
     this.roomId = options.roomId;
   }
   public async init() {
-    const url = `http://110.42.220.32:9528/api/v1/im/join`;
+    const url = `https://cssbattle.wuwenzhou.com.cn:9529/api/v1/im/join`;
     const data = {
       userId: this.userId,
       roomId: this.roomId,
@@ -36,7 +36,7 @@ class IM {
   }
   private initSocket() {
     return new Promise((resolve, reject) => {
-      const url = `ws://110.42.220.32:9528/api/v1/im/message?roomId=${this.roomId}&userId=${this.userId}`;
+      const url = `wss://cssbattle.wuwenzhou.com.cn:9529/api/v1/im/message?roomId=${this.roomId}&userId=${this.userId}`;
       //   const url = `ws://110.42.220.32:952/api/v1/im/message`;
       this.Socket = new WebSocket(url);
       this.Socket.onopen = function () {
