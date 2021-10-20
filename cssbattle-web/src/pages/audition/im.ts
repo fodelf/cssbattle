@@ -14,6 +14,7 @@ class IM {
   }
   public async init() {
     const url = `https://cssbattle.wuwenzhou.com.cn:9529/api/v1/im/join`;
+    // const url = `http://127.0.0.1:9528/api/v1/im/join`;
     const data = {
       userId: this.userId,
       roomId: this.roomId,
@@ -35,12 +36,16 @@ class IM {
     await this.initSocket();
     this.Socket.onmessage = async (event: any) => {
       const data = event.data;
+      const message = JSON.parse(data);
+      // if (this.userId != message.userId) {
       console.log('接收消息', data);
       // debugger;
       for (let i = 0; i < this.callbackList.length; i++) {
         let item = this.callbackList[i];
-        await item(JSON.parse(data));
+        await item(message);
       }
+      // }
+
       // this.callbackList.forEach((item: any) => {
       //   item(JSON.parse(data));
       // });
@@ -49,7 +54,7 @@ class IM {
   private initSocket() {
     return new Promise((resolve, reject) => {
       const url = `wss://cssbattle.wuwenzhou.com.cn:9529/api/v1/im/message?roomId=${this.roomId}&userId=${this.userId}`;
-      //   const url = `ws://110.42.220.32:952/api/v1/im/message`;
+      // const url = `ws://127.0.0.1:9528/api/v1/im/message?roomId=${this.roomId}&userId=${this.userId}`;
       this.Socket = new WebSocket(url);
       this.Socket.onopen = function () {
         console.log('链接成功');

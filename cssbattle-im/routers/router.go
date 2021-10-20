@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-02 10:36:35
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-19 14:18:51
+ * @LastEditTime: 2021-10-20 09:33:47
  */
 package router
 
@@ -54,30 +54,45 @@ func dispatch(data []byte) {
 		return
 	}
 	// fmt.Println(msg.Cmd)
-	fmt.Println(msg.UserId, "UserIdUserIdUserIdUserIdUserIdUserIdUserIdUserIdUserIdUserIdUserIdUserId")
+	fmt.Println("roomid------------------------", msg.RoomId)
 	// fmt.Println(CmdRoomMsg)
 	switch msg.Cmd {
 	case CmdSingleMsg:
 		// sendMsg(msg.Dstid, data)
 	case CmdRoomMsg:
-		fmt.Println("DSSD")
 		IMMg := database.NewMgo("im")
 		roomFilter := bson.D{{"roomid", msg.RoomId}}
 		var ImInfo InterfaceEntity.IMInfo
 		database.FindOne(IMMg, roomFilter).Decode(&ImInfo)
-		fmt.Println(ImInfo.UserList)
+		// fmt.Println(ImInfo.UserList)
+		// fmt.Println("child----msg.UserId-----", msg.UserId)
+		fmt.Println("clientMap", clientMap)
 		for _, v := range ImInfo.UserList {
+			fmt.Println("child----v-----", v)
 			if v != msg.UserId {
-				if _, ok := clientMap[v]; ok {
-					child := clientMap[v]
-					fmt.Println("child---------", child)
-					child.DataQueue <- data
+				fmt.Println("child----v-----ggggggg", v)
+				child, ok := clientMap[v]
+				if ok {
+					fmt.Println("发送到小管道")
 					// err = child.Conn.WriteMessage(websocket.TextMessage, data)
 					// if err != nil {
 					// 	log.Println(err.Error())
 					// 	return
 					// }
+					child.DataQueue <- data
+				} else {
+					fmt.Println("key不存在", v)
 				}
+				// if _, ok := clientMap[v]; ok {
+				// 	child := clientMap[v]
+				// 	fmt.Println("child----sddddddddd-----", child)
+				// 	child.DataQueue <- data
+				// 	// err = child.Conn.WriteMessage(websocket.TextMessage, data)
+				// 	// if err != nil {
+				// 	// 	log.Println(err.Error())
+				// 	// 	return
+				// 	// }
+				// }
 			}
 		}
 		// for _, v := range clientMap {
@@ -133,7 +148,7 @@ func Chat(writer http.ResponseWriter, request *http.Request) {
 	// roomFilter := bson.D{{"roomid", roomId}}
 	// var ImInfo InterfaceEntity.IMInfo
 	// database.FindOne(IMMg, roomFilter).Decode(&ImInfo)
-	// fmt.Println(ImInfo)
+	fmt.Println("userId------", userId)
 	// clientMap[userId] = node
 	rwlocker.Lock()
 	clientMap[userId] = node
@@ -181,8 +196,8 @@ func sendproc(node *Node) {
 				log.Println(err.Error())
 				return
 			}
-			// fmt.Println("msg.UserId", msg.UserId)
-			// fmt.Println("node.UserId", node.UserId)
+			fmt.Println("msg.UserId", msg.UserId)
+			fmt.Println("node.UserId", node.UserId)
 			// if msg.UserId != node.UserId {
 			err = node.Conn.WriteMessage(websocket.TextMessage, data)
 			if err != nil {

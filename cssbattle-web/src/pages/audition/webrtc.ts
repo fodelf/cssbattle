@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-17 19:05:39
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-19 15:05:35
+ * @LastEditTime: 2021-10-20 09:53:10
  */
 type WebRtcOptions = {
   im: any;
@@ -28,31 +28,38 @@ class WebRtc {
     };
     this.im.send(message);
     console.log('初始化发送');
+    // const pc1 = await this.newPC(sendId, true);
+    // this.cache.set(sendId, pc1);
     this.im.on('message', async (mes: any) => {
       const content = mes.content.content;
       const sendId = mes.userId;
       const type = mes.content.type;
       switch (type) {
         case 'WebRtc:addRemote':
-          if (!this.cache.get(sendId)) {
-            const pc1 = await this.newPC(sendId);
-            this.cache.set(sendId, pc1);
-          }
+          // if (!this.cache.get(sendId)) {
+          // const message = {
+          //   type: 'WebRtc:addRemote',
+          //   content: {
+          //     displayId: this.userId,
+          //   },
+          // };
+          // this.im.send(message);
+          const pc1 = await this.newPC(sendId, true);
+          this.cache.set(sendId, pc1);
+          // }
           break;
         //监听到远程的offer//只处理自己设备的offer
         case 'WebRtc:RTCOffer':
           // if (content.displayId == displayId) {
           // 创建的时间可以自定义不一定在offer中创建
-          let pc = this.cache.get(sendId);
-          if (!this.cache.get(sendId)) {
-            pc = await this.newPC(sendId);
-            this.cache.set(sendId, pc);
-            const rtcDescription = { type: 'offer', sdp: content.sdp };
-            //设置远端setRemoteDescription
-            pc.setRemoteDescription(
-              new RTCSessionDescription(rtcDescription as any),
-            );
-          }
+          // debugger;
+          let pc = await this.newPC(sendId);
+          this.cache.set(sendId, pc);
+          const rtcDescription = { type: 'offer', sdp: content.sdp };
+          //设置远端setRemoteDescription
+          pc.setRemoteDescription(
+            new RTCSessionDescription(rtcDescription as any),
+          );
           //createAnswer
           const offerOptions = {
             offerToReceiveAudio: 1,
@@ -94,20 +101,35 @@ class WebRtc {
               .catch((e: any) => {
                 console.log('Error: Failure during addIceCandidate()', e);
               });
-            // }
           }
+          // }
           break;
         case 'WebRtc:RTCAnswer':
           const rtcDescription1 = { type: 'answer', sdp: content.sdp };
           //设置远端setRemoteDescription
+          // debugger;
           var pc2 = this.cache.get(sendId);
           pc2.setRemoteDescription(
             new RTCSessionDescription(rtcDescription1 as any),
           );
+        // const message = {
+        //   type: 'WebRtc:addRemote',
+        //   content: {
+        //     displayId: this.userId,
+        //   },
+        // };
+        // this.im.send(message);
+        // const message = {
+        //   type: 'WebRtc:addRemote',
+        //   content: {
+        //     displayId: this.userId,
+        //   },
+        // };
+        // this.im.send(message);
       }
     });
   }
-  public async newPC(userId: string) {
+  public async newPC(userId: string, isAddRemote?: boolean) {
     const config = {
       configuration: {
         offerToReceiveAudio: true,
@@ -120,8 +142,8 @@ class WebRtc {
           credential: '123456',
         },
       ],
-      iceTransportPolicy: 'relay',
-      iceCandidatePoolSize: '0',
+      // iceTransportPolicy: 'relay',
+      // iceCandidatePoolSize: '0',
       // iceTransportPolicy: 're',
     } as any;
     const pc = new RTCPeerConnection(config) as any;
@@ -154,23 +176,15 @@ class WebRtc {
     };
     pc.ontrack = (e: any) => {
       console.log('ontrack', e);
-      // const video = document.getElementById('2') as HTMLVideoElement;
-      // debugger;
-      // video.srcObject = e.streams[0];
-      // video.play();
-      // video.onloadedmetadata = (e) => {
-      //   video.play();
-      // };
     };
-
     pc.onaddstream = (e: any) => {
       console.log('渲染视频', e);
       var video = document.getElementById('2') as HTMLVideoElement;
       video.srcObject = e.stream;
-      video.play();
-      // video.onloadedmetadata = function (e) {
-      //   video.play();
-      // };
+      // video.play();
+      video.onloadedmetadata = function (e) {
+        video.play();
+      };
     };
     // console.log("onaddstream", e);
     // const video = document.getElementById('2') as HTMLVideoElement;
@@ -196,6 +210,7 @@ class WebRtc {
     //   audio: true,
     //   video: true,
     // };
+    // 发送offer
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
     // const video = document.getElementById('1') as HTMLVideoElement;
     // video.srcObject = stream;
@@ -203,18 +218,19 @@ class WebRtc {
     //   video.play();
     // };
     pc.addStream(stream);
-    // 创建offer
-    const offer = await pc.createOffer(offerOptions);
-    // 设置本地
-    await pc.setLocalDescription(offer);
-    // 发送offer
-    const mes = {
-      type: 'WebRtc:RTCOffer',
-      content: {
-        sdp: offer.sdp,
-      },
-    };
-    this.im.send(mes);
+    if (isAddRemote) {
+      // 创建offer
+      const offer = await pc.createOffer(offerOptions);
+      // 设置本地
+      await pc.setLocalDescription(offer);
+      const mes = {
+        type: 'WebRtc:RTCOffer',
+        content: {
+          sdp: offer.sdp,
+        },
+      };
+      this.im.send(mes);
+    }
     return pc;
   }
 }
