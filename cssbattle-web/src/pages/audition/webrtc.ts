@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-17 19:05:39
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-21 22:21:49
+ * @LastEditTime: 2021-10-21 23:07:26
  */
 type WebRtcOptions = {
   im: any;
@@ -23,7 +23,6 @@ class WebRtc {
     this.init();
   }
   public async init() {
-    await this.newPC('1634737217616');
     const message = {
       type: 'WebRtc:call',
       content: {
@@ -41,15 +40,23 @@ class WebRtc {
       // let pc = this.cache.get(sendId);
       switch (type) {
         case 'WebRtc:call':
-          await this.newPC(`${this.userId}_${sendId}`);
-          // await this.newPC(`${sendId}_${this.userId}`, 'call');
-          const message = {
-            type: 'WebRtc:replay',
-            content: {
-              displayId: this.userId,
-            },
-          };
-          this.im.send(message);
+          if (
+            !(
+              this.cache.get(`${sendId}_${this.userId}`) ||
+              this.cache.get(`${this.userId}_${sendId}`)
+            )
+          ) {
+            await this.newPC(`${this.userId}_${sendId}`);
+            // await this.newPC(`${sendId}_${this.userId}`, 'call');
+            const message = {
+              type: 'WebRtc:replay',
+              content: {
+                displayId: this.userId,
+              },
+            };
+            this.im.send(message);
+          }
+
           break;
         case 'WebRtc:replay':
           await this.newPC(`${this.userId}_${sendId}`);
@@ -87,6 +94,9 @@ class WebRtc {
           // 创建的时间可以自定义不一定在offer中创建
           // debugger;
           let pcRTCOffer = this.cache.get(`${this.userId}_${sendId}`);
+          if (!pcRTCOffer) {
+            await this.newPC(`${this.userId}_${sendId}`);
+          }
           const rtcDescription = { type: 'offer', sdp: content.sdp };
           console.log('sendId----------', sendId);
           //设置远端setRemoteDescription
@@ -263,6 +273,7 @@ class WebRtc {
       video.style.height = '100%';
       video.style.width = '100%';
       video.srcObject = e.stream;
+      console.log('播放视频', e);
       video.play();
       // video.onloadedmetadata = function (e) {
       //   video.play();
