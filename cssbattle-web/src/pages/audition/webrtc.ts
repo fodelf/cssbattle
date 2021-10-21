@@ -4,12 +4,12 @@
  * @Author: 吴文周
  * @Date: 2021-10-17 19:05:39
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-21 09:04:49
+ * @LastEditTime: 2021-10-21 11:45:47
  */
 type WebRtcOptions = {
   im: any;
   userId: string;
-  ownerId: string;
+  // ownerId: string;
 };
 class WebRtc {
   private im;
@@ -211,6 +211,20 @@ class WebRtc {
         }
       };
     }
+    const constraints = {
+      audio: {
+        noiseSuppression: true, // 降噪
+        echoCancellation: true, // 回音消除
+      },
+      video: true,
+    };
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    // const video = document.getElementById('1') as HTMLVideoElement;
+    // video.srcObject = stream;
+    // video.onloadedmetadata = function (e) {
+    //   video.play();
+    // };
+    pc.addStream(stream);
     // const constraints = {
     //   audio: true,
     //   video: true,
@@ -236,147 +250,19 @@ class WebRtc {
     };
     pc.onaddstream = (e: any) => {
       console.log('渲染视频', e);
-      var video = document.getElementById('2') as HTMLVideoElement;
+      var videoContent = document.getElementById('2') as HTMLElement;
+      videoContent.innerHTML = '';
+      const video = document.createElement('video');
+      videoContent.appendChild(video);
+      video.style.height = '100%';
+      video.style.width = '100%';
       video.srcObject = e.stream;
-      // video.play();
-      video.onloadedmetadata = function (e) {
-        video.play();
-      };
+      video.play();
+      // video.onloadedmetadata = function (e) {
+      //   video.play();
+      // };
     };
-    const constraints = {
-      audio: {
-        noiseSuppression: true, // 降噪
-        echoCancellation: true, // 回音消除
-      },
-      video: true,
-    };
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    // const video = document.getElementById('1') as HTMLVideoElement;
-    // video.srcObject = stream;
-    // video.onloadedmetadata = function (e) {
-    //   video.play();
-    // };
-    pc.addStream(stream);
-    this.cache.set(sendId, pc);
-    // console.log("onaddstream", e);
-    // const video = document.getElementById('2') as HTMLVideoElement;
-    // video.srcObject = e.stream;
-    // video.play();
-    // video.onloadedmetadata = function (e) {
-    //   video.play();
-    // };
-    // debugger;
-    // };
-    // if (isAddRemote) {
-    //   // 创建offer
-    //   const offer = await pc.createOffer(offerOptions);
-    //   // 设置本地
-    //   await pc.setLocalDescription(offer);
-    //   const mes = {
-    //     type: 'WebRtc:RTCOffer',
-    //     content: {
-    //       sdp: offer.sdp,
-    //     },
-    //   };
-    //   this.im.send(mes);
-    // }
-    return pc;
-  }
-  public async newPC1(sendId: string, newWithOffer?: boolean) {
-    const config = {
-      configuration: {
-        offerToReceiveAudio: true,
-        offerToReceiveVideo: true,
-      },
-      iceServers: [
-        {
-          urls: ['turn:110.42.220.32:3478'],
-          username: 'admin',
-          credential: '123456',
-        },
-      ],
-      // iceTransportPolicy: 'relay',
-      // iceCandidatePoolSize: '0',
-      // iceTransportPolicy: 're',
-    } as any;
-    const pc = new RTCPeerConnection(config) as any;
-    if (newWithOffer) {
-      const offerOptions1 = {
-        offerToReceiveAudio: 1,
-        offerToReceiveVideo: 1,
-      } as any;
-      const offer = await pc.createOffer(offerOptions1);
-      // 设置本地
-      await pc.setLocalDescription(offer);
-      const mes = {
-        type: 'WebRtc:RTCOffer1',
-        displayId: sendId,
-        content: {
-          sdp: offer.sdp,
-        },
-      };
-      this.im.send(mes);
-    }
-    // const constraints = {
-    //   audio: true,
-    //   video: true,
-    // };
-    // 发送offer
-    // }
-    // this.cache.set(userId, pc);
-    pc.onicecandidate = (event: any) => {
-      // 点对点链接
-      if (event.candidate) {
-        const mes = {
-          type: 'WebRtc:RTCOnicecandidate',
-          displayId: sendId,
-          content: {
-            sdpMid: event.candidate.sdpMid,
-            sdpMLineIndex: event.candidate.sdpMLineIndex,
-            sdp: event.candidate.candidate,
-          },
-        };
-        this.im.send(mes);
-      }
-    };
-    pc.onnegotiationneeded = (e: any) => {
-      console.log('onnegotiationneeded', e);
-    };
-    pc.onicegatheringstatechange = (e: any) => {
-      console.log('onicegatheringstatechange', e);
-    };
-    pc.oniceconnectionstatechange = (e: any) => {
-      console.log('oniceconnectionstatechange', e);
-    };
-    pc.onsignalingstatechange = (e: any) => {
-      console.log('onsignalingstatechange', e);
-    };
-    pc.ontrack = (e: any) => {
-      console.log('ontrack', e);
-    };
-    pc.onaddstream = (e: any) => {
-      console.log('渲染视频', e);
-      var video = document.getElementById('2') as HTMLVideoElement;
-      video.srcObject = e.stream;
-      // video.play();
-      video.onloadedmetadata = function (e) {
-        video.play();
-      };
-    };
-    const constraints = {
-      audio: {
-        noiseSuppression: true, // 降噪
-        echoCancellation: true, // 回音消除
-      },
-      video: true,
-    };
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    // const video = document.getElementById('1') as HTMLVideoElement;
-    // video.srcObject = stream;
-    // video.onloadedmetadata = function (e) {
-    //   video.play();
-    // };
-    pc.addStream(stream);
+
     this.cache.set(sendId, pc);
     // console.log("onaddstream", e);
     // const video = document.getElementById('2') as HTMLVideoElement;

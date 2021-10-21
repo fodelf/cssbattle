@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:49:43
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-19 13:01:04
+ * @LastEditTime: 2021-10-21 11:41:27
  */
 import { useCallback, useState, useRef, useEffect } from 'react';
 import styles from './index.less';
@@ -549,7 +549,8 @@ const Audition: React.FC = (props: any) => {
         <div className={styles.rightContent}>
           <video className={styles.videoContent} id="1"></video>
           <Divider />
-          <video className={styles.videoContent} id="2"></video>
+          <div className={styles.videoContent} id="2"></div>
+          {/* <video className={styles.videoContent} id="2"></video> */}
           {/* <div className={styles.imgBg}></div>
           <div className={styles.imgBg}></div> */}
         </div>
