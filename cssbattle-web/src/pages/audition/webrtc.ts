@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-17 19:05:39
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-21 11:45:47
+ * @LastEditTime: 2021-10-21 22:21:49
  */
 type WebRtcOptions = {
   im: any;
@@ -171,12 +171,18 @@ class WebRtc {
       },
       iceServers: [
         {
+          urls: ['stun:110.42.220.32:3478'],
+          username: 'admin',
+          credential: '123456',
+        },
+        {
           urls: ['turn:110.42.220.32:3478'],
           username: 'admin',
           credential: '123456',
         },
       ],
       // iceTransportPolicy: 'relay',
+      // iceTransportPolicy: 'all',
       // iceCandidatePoolSize: '0',
       // iceTransportPolicy: 're',
     } as any;
