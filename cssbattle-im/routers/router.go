@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-02 10:36:35
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-20 09:33:47
+ * @LastEditTime: 2021-10-20 22:58:18
  */
 package router
 
@@ -113,6 +113,12 @@ var PostsById map[string]*Node
 //读写锁
 var rwlocker sync.RWMutex
 
+func MapToJson(param map[string]interface{}) string {
+	dataType, _ := json.Marshal(param)
+	dataString := string(dataType)
+	return dataString
+}
+
 //实现聊天的功能
 func Chat(writer http.ResponseWriter, request *http.Request) {
 	query := request.URL.Query()
@@ -170,7 +176,20 @@ func Chat(writer http.ResponseWriter, request *http.Request) {
 	//开启协程完成接收逻辑
 	go recvproc(node)
 	// fmt.Println("链接结束")
-	// sendMsg(userId, []byte("welcome!"))
+	// str := `{"Cmd":"1","userId":userId}`
+	// mmp := make(map[string]interface{})
+	// mmp["name"] = "Mr.Sun"
+	// mmp["age"] = 18
+	// mmp["niubility"] = true
+
+	// JSONMap := map[string]interface{}{"Cmd": 1, "userId": userId, "roomId": roomId, "content": map[string]interface{}{"type": "WebRtc:addRemote"}}
+	// json, err := json.Marshal(JSONMap)
+	// if err != nil {
+	// 	fmt.Println("json err:", err)
+	// }
+	// // jsonStr := MapToJson(JSONMap)
+	// dispatch([]byte(string(json)))
+	// sendMsg(userId, []byte(jsonStr))
 }
 
 //添加新的群ID到用户的groupset中
@@ -186,6 +205,17 @@ func AddGroupId(userId string, gid int64) {
 
 //发送逻辑
 func sendproc(node *Node) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("write stop")
+
+		}
+	}()
+	defer func() {
+		delete(clientMap, node.UserId)
+		node.Conn.Close()
+		fmt.Println("Client发送数据 defer")
+	}()
 	for {
 		select {
 		case data := <-node.DataQueue:
@@ -214,6 +244,16 @@ func sendproc(node *Node) {
 //接收逻辑
 func recvproc(node *Node) {
 	fmt.Printf("接收消息")
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("write stop")
+		}
+	}()
+
+	defer func() {
+		fmt.Println("读取客户端数据 关闭send")
+		close(node.DataQueue)
+	}()
 	for {
 		_, data, err := node.Conn.ReadMessage()
 		if err != nil {

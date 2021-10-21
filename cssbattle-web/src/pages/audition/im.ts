@@ -37,14 +37,14 @@ class IM {
     this.Socket.onmessage = async (event: any) => {
       const data = event.data;
       const message = JSON.parse(data);
-      // if (this.userId != message.userId) {
-      console.log('接收消息', data);
-      // debugger;
-      for (let i = 0; i < this.callbackList.length; i++) {
-        let item = this.callbackList[i];
-        await item(message);
+      if (this.userId != message.userId) {
+        // console.log('接收消息', data);
+        // debugger;
+        for (let i = 0; i < this.callbackList.length; i++) {
+          let item = this.callbackList[i];
+          await item(message);
+        }
       }
-      // }
 
       // this.callbackList.forEach((item: any) => {
       //   item(JSON.parse(data));
