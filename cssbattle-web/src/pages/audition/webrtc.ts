@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-17 19:05:39
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-22 09:00:36
+ * @LastEditTime: 2021-10-22 09:34:46
  */
 type WebRtcOptions = {
   im: any;
@@ -41,39 +41,55 @@ class WebRtc {
       switch (type) {
         case 'WebRtc:call':
           // await this.newPC(`${this.userId}_${sendId}`);
-          await this.newPC(`${this.userId}_${sendId}`, 'call');
-        // const message = {
-        //   type: 'WebRtc:replay',
-        //   content: {
-        //     displayId: this.userId,
-        //   },
-        // };
-        // this.im.send(message);
-        // break;
+          await this.newPC(`${this.userId}_${sendId}`);
+          const message = {
+            type: 'WebRtc:replay',
+            content: {
+              displayId: this.userId,
+            },
+          };
+          this.im.send(message);
+          break;
         case 'WebRtc:replay':
           // await this.newPC(`${this.userId}_${sendId}`);
-          // // await this.newPC(`${sendId}_${this.userId}`, 'call');
-          // const message1 = {
-          //   type: 'WebRtc:replayBack',
-          //   content: {
-          //     displayId: this.userId,
-          //   },
-          // };
-          // this.im.send(message1);
+          // console.log('sdsddss');
+          await this.newPC(`${this.userId}_${sendId}`);
+          const message1 = {
+            type: 'WebRtc:replayBack',
+            content: {
+              displayId: this.userId,
+            },
+          };
+          this.im.send(message1);
           break;
-        // case 'WebRtc:replayBack':
-        //   await this.newPC(`${sendId}_${this.userId}`, 'call');
-        //   // await this.newPC(`${sendId}_${sendId}`, 'replay');
-        //   break;
+        case 'WebRtc:replayBack':
+          const pcReplayBack = this.cache.get(`${this.userId}_${sendId}`);
+          const offerOptions1 = {
+            offerToReceiveAudio: 1,
+            offerToReceiveVideo: 1,
+          } as any;
+          const offer = await pcReplayBack.createOffer(offerOptions1);
+          // 设置本地
+          await pcReplayBack.setLocalDescription(offer);
+          const mes = {
+            type: 'WebRtc:RTCOffer',
+            content: {
+              sdp: offer.sdp,
+            },
+          };
+          this.im.send(mes);
+          //   await this.newPC(`${sendId}_${this.userId}`, 'call');
+          //   // await this.newPC(`${sendId}_${sendId}`, 'replay');
+          break;
         //监听到远程的offer//只处理自己设备的offer
         case 'WebRtc:RTCOffer':
           // if (content.displayId == displayId) {
           // 创建的时间可以自定义不一定在offer中创建
           // debugger;
           let pcRTCOffer = this.cache.get(`${this.userId}_${sendId}`);
-          if (!pcRTCOffer) {
-            pcRTCOffer = await this.newPC(`${this.userId}_${sendId}`);
-          }
+          // if (!pcRTCOffer) {
+          //   pcRTCOffer = await this.newPC(`${this.userId}_${sendId}`);
+          // }
           const rtcDescription = { type: 'offer', sdp: content.sdp };
           // console.log('sendId----------', sendId);
           //设置远端setRemoteDescription
@@ -250,29 +266,29 @@ class WebRtc {
       video.style.height = '100%';
       video.style.width = '100%';
       video.srcObject = e.stream;
-      console.log('播放视频', e);
-      video.play();
-      // video.onloadedmetadata = function (e) {
-      //   video.play();
-      // };
+      // video.play();
+      video.onloadedmetadata = function (e) {
+        console.log('播放视频', e);
+        video.play();
+      };
     };
     this.cache.set(sendId, pc);
-    if (newWithOffer == 'call') {
-      const offerOptions1 = {
-        offerToReceiveAudio: 1,
-        offerToReceiveVideo: 1,
-      } as any;
-      const offer = await pc.createOffer(offerOptions1);
-      // 设置本地
-      await pc.setLocalDescription(offer);
-      const mes = {
-        type: 'WebRtc:RTCOffer',
-        content: {
-          sdp: offer.sdp,
-        },
-      };
-      this.im.send(mes);
-    }
+    // if (newWithOffer == 'call') {
+    //   const offerOptions1 = {
+    //     offerToReceiveAudio: 1,
+    //     offerToReceiveVideo: 1,
+    //   } as any;
+    //   const offer = await pc.createOffer(offerOptions1);
+    //   // 设置本地
+    //   await pc.setLocalDescription(offer);
+    //   const mes = {
+    //     type: 'WebRtc:RTCOffer',
+    //     content: {
+    //       sdp: offer.sdp,
+    //     },
+    //   };
+    //   this.im.send(mes);
+    // }
     // console.log("onaddstream", e);
     // const video = document.getElementById('2') as HTMLVideoElement;
     // video.srcObject = e.stream;
