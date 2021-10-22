@@ -22,7 +22,7 @@ export default defineConfig({
     {
       src:
         process.env.NODE_ENV === 'production'
-          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.38/lsp.js'
+          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.39/lsp.js'
           : '/lsp.js',
     },
   ],
@@ -31,7 +31,7 @@ export default defineConfig({
       rel: 'icon',
       href:
         process.env.NODE_ENV === 'production'
-          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.38/favicon.ico'
+          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.39/favicon.ico'
           : '/favicon.ico',
     },
   ],
@@ -42,7 +42,7 @@ export default defineConfig({
   fastRefresh: {},
   publicPath:
     process.env.NODE_ENV === 'production'
-      ? 'https://cdn.wuwenzhou.com.cn/web/0.0.38/'
+      ? 'https://cdn.wuwenzhou.com.cn/web/0.0.39/'
       : '/',
   proxy: {
     '/api': {
@@ -53,8 +53,8 @@ export default defineConfig({
   },
   // devServer: {
   //   https: {
-  //     key: './Nginx/2_cssbattle.wuwenzhou.com.cn/web/0.0.38/',
-  //     cert: './Nginx/1_cssbattle.wuwenzhou.com.cn/web/0.0.38/',
+  //     key: './Nginx/2_cssbattle.wuwenzhou.com.cn/web/0.0.39/',
+  //     cert: './Nginx/1_cssbattle.wuwenzhou.com.cn/web/0.0.39/',
   //   },
   // },
 });
