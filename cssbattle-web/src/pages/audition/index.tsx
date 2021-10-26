@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:49:43
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-26 23:26:54
+ * @LastEditTime: 2021-10-27 00:38:11
  */
 import React, { useCallback, useState, useRef, useEffect } from 'react';
 import styles from './index.less';
@@ -220,6 +220,11 @@ const CssDetail = (props: any) => {
     if (!props.codeType) {
       createIframe();
       drag();
+    } else {
+      const contentDom = (contentRef.current as any) as HTMLElement;
+      contentDom.onmouseover = null;
+      document.onmousemove = null;
+      contentDom.onmouseleave = null;
     }
   }, [props.codeValue, props.codeType]);
 
@@ -327,9 +332,13 @@ const CssDetail = (props: any) => {
         <div className={styles.iframeContent} ref={contentRef}>
           <div id="iframeBox" ref={iframeBoxRef} className={styles.iframeBox}>
             <iframe id="iframe" ref={iframeRef}></iframe>
-            <div className={styles.dragLine} ref={draggleLineRef}></div>
+            {!props.codeType && (
+              <div className={styles.dragLine} ref={draggleLineRef}></div>
+            )}
           </div>
-          <img className={styles.imgBox} src={props.imgUrl} alt="" />
+          {!props.codeType && (
+            <img className={styles.imgBox} src={props.imgUrl} alt="" />
+          )}
         </div>
         {!props.codeType && (
           <>
@@ -546,7 +555,7 @@ const Audition: React.FC = (props: any) => {
         case 'Audition:start':
           console.log('12121212');
           getCssList();
-
+          setAuditionStatus(1);
           break;
         case 'Audition:end':
           setUnableEdit(true);
@@ -724,7 +733,7 @@ const Audition: React.FC = (props: any) => {
           return [...prevState, ...list];
         });
       }).then((res: any) => {
-        if (res && res.length == 0) {
+        if (res && res.length === 0) {
           return;
         }
         let currentIndex = 0;
@@ -1132,6 +1141,13 @@ const Audition: React.FC = (props: any) => {
                   </Button>
                   <Button
                     type="primary"
+                    loading={loading}
+                    onClick={confirmCode}
+                  >
+                    提交
+                  </Button>
+                  <Button
+                    type="primary"
                     onClick={shareScreen}
                     className={isStuShare ? '' : styles.hide}
                   >
@@ -1143,13 +1159,6 @@ const Audition: React.FC = (props: any) => {
                     className={!isStuShare ? '' : styles.hide}
                   >
                     关闭分享
-                  </Button>
-                  <Button
-                    type="primary"
-                    loading={loading}
-                    onClick={confirmCode}
-                  >
-                    提交
                   </Button>
                 </>
               ) : (
@@ -1192,8 +1201,10 @@ const Audition: React.FC = (props: any) => {
             ) : (
               <>
                 <span className={styles.textTit}>题目</span>
-                {interviewStatus === 'unactiveInterview' &&
-                auditionStatus === 0 ? (
+                {(interviewStatus === 'unactiveInterview' &&
+                  auditionStatus === 0) ||
+                codeType === 'js' ||
+                codeType === 'vue' ? (
                   <></>
                 ) : (
                   <span className={styles.textTit}>图片大小400px x 300px</span>
