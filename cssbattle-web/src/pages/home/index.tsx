@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:39:09
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-26 09:27:44
+ * @LastEditTime: 2021-10-26 22:59:14
  */
 import { Button, List, Skeleton, Avatar, Tag } from 'antd';
 import { getImgList, getBattleTypeList, getRankList } from '@/api/home';
@@ -37,15 +37,21 @@ const CurrentBattle: React.FC = (props) => {
               <Button type="primary" onClick={toLogin}>
                 登录/注册
               </Button>
-              {/* <Button type="primary" onClick={toManage}>
+              <Button type="primary" onClick={toManage}>
                 前端面试管理
-              </Button> */}
+              </Button>
+              <div className={styles.newLeft}>
+                东半球最牛的前端面试工具来了！！！
+              </div>
             </div>
           ) : (
             <div className={styles.btn}>
-              {/* <Button type="primary" onClick={toManage}>
+              <Button type="primary" onClick={toManage}>
                 前端面试管理
-              </Button> */}
+              </Button>
+              <div className={styles.new}>
+                东半球最牛的前端面试工具来了！！！
+              </div>
             </div>
           )}
         </div>

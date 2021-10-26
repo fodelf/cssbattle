@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:49:43
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-26 09:24:42
+ * @LastEditTime: 2021-10-26 23:26:54
  */
 import React, { useCallback, useState, useRef, useEffect } from 'react';
 import styles from './index.less';
@@ -22,6 +22,9 @@ import {
   Row,
   Col,
   Divider,
+  Dropdown,
+  Menu,
+  Space,
 } from 'antd';
 const { Option } = Select;
 const { TextArea } = Input;
@@ -66,6 +69,8 @@ import {
   exerciseSubmit,
   getExerciseDetail,
   updateAuditionInfo,
+  getCSSResultList,
+  getExerciseResultList,
 } from '@/api/audition';
 import {
   getAuditionCssList,
@@ -192,7 +197,8 @@ const Excise: React.FC = (props: any) => {
             </Checkbox.Group>
           ) : (
             <TextArea
-              rows={4}
+              rows={10}
+              cols={100}
               disabled={interviewStatus === 'activeInterview' ? true : false}
               onChange={(e) => changeAnswer(e.target.value)}
               value={answer}
@@ -222,6 +228,12 @@ const CssDetail = (props: any) => {
       createIframe();
     }
   }, [props.isRunCode]);
+
+  useEffect(() => {
+    if (props.codeType) {
+      clearIframe();
+    }
+  }, [props.codeType]);
 
   const onCopy = (colorText: string) => {
     const oInput = document.createElement('input');
@@ -264,6 +276,20 @@ const CssDetail = (props: any) => {
       iframeDoc?.write(`
       <body>
         ${props.codeValue}
+      </body>
+      `);
+      iframeDoc?.close();
+    }
+  };
+
+  const clearIframe = () => {
+    const iframe = iframeRef.current;
+    console.log(iframeRef);
+    if (iframe !== null) {
+      const iframeDoc = (iframe as HTMLIFrameElement).contentDocument;
+      iframeDoc?.open();
+      iframeDoc?.write(`
+      <body>
       </body>
       `);
       iframeDoc?.close();
@@ -321,6 +347,122 @@ const CssDetail = (props: any) => {
   );
 };
 
+const AuditionGrade = (props: any) => {
+  const { auditionVisible } = props;
+  const [answerList, setAnswerList] = useState<any>([]);
+
+  useEffect(() => {
+    if (props.auditionVisible) {
+      getCssResult();
+    }
+  }, [props.auditionVisible]);
+
+  const getCssResult = () => {
+    getCSSResultList({
+      id: props.auditionId,
+      userId: props.sendId,
+    }).then((res) => {
+      setAnswerList(res.data.data || []);
+      getExciseResult();
+    });
+  };
+
+  const getExciseResult = () => {
+    getExerciseResultList({
+      id: props.auditionId,
+      userId: props.sendId,
+    }).then((res) => {
+      setAnswerList((prevState: any) => [
+        ...prevState,
+        ...(res.data.data || []),
+      ]);
+    });
+  };
+  const modalButtons = (
+    <Button type="primary" onClick={props.closeModal}>
+      关闭
+    </Button>
+  );
+  console.log(answerList);
+  return (
+    <Modal
+      title="面试题答案"
+      visible={auditionVisible}
+      footer={modalButtons}
+      onCancel={props.closeModal}
+    >
+      {answerList.map((item: any, index: number) => {
+        return (
+          <div key={index}>
+            {item.cssId ? (
+              <p>
+                {index + 1}.最后得分：{item.score.toFixed(2)}（匹配度：
+                {(item.match * 100).toFixed(2) + '%'}）
+              </p>
+            ) : item.type === 0 ? (
+              <>
+                <p className={styles.modalTitle}>
+                  {index + 1}.{item.name}（正确答案：{item.answer[0]}）
+                </p>
+                <Radio.Group value={item.answer[0]}>
+                  <Space direction="vertical">
+                    {(item.options || []).map(
+                      (optionItem: any, index: number) => {
+                        return (
+                          <Radio
+                            value={optionItem.key}
+                            key={optionItem.key}
+                            disabled
+                          >
+                            {optionItem.key}.{optionItem.des}
+                          </Radio>
+                        );
+                      },
+                    )}
+                  </Space>
+                </Radio.Group>
+              </>
+            ) : item.type === 1 ? (
+              <>
+                <p className={styles.modalTitle}>
+                  {index + 1}.{item.name}（正确答案：
+                  {item.rightAnswer.join(',')}）
+                </p>
+                <Checkbox.Group value={item.answer}>
+                  <Row>
+                    {(item.options || []).map(
+                      (optionItem: any, index: number) => {
+                        return (
+                          <Col span={12}>
+                            <Checkbox
+                              value={optionItem.key}
+                              key={optionItem.key}
+                              disabled
+                            >
+                              {optionItem.key}.{optionItem.des}
+                            </Checkbox>
+                          </Col>
+                        );
+                      },
+                    )}
+                  </Row>
+                </Checkbox.Group>
+              </>
+            ) : (
+              <>
+                <p className={styles.modalTitle}>
+                  {index + 1}.{item.name}
+                </p>
+                <p>{(item.answer && item.answer[0]) || ''}</p>
+              </>
+            )}
+          </div>
+        );
+      })}
+    </Modal>
+  );
+};
+
 const Audition: React.FC = (props: any) => {
   const [codeValue, setValue] = useState(
     '<div>\n  <div></div>\n</div>\n\n<style>\n  div {\n    width: 100px;\n    height: 100px;\n    background: #dd6b4d;\n  }\n</style>',
@@ -353,6 +495,8 @@ const Audition: React.FC = (props: any) => {
   const [webRtc, setwebRtc] = useState<any>(null);
   const [isShare, setShare] = useState<any>(true);
   const [isStuShare, setStuShare] = useState<any>(true);
+  const [sendId, setSendId] = useState('');
+  const [auditionVisible, setAuditionVisible] = useState(false);
 
   // const [contentDetail, setContentDetail] = useState<any>({})
   let contentDetail: any;
@@ -396,6 +540,7 @@ const Audition: React.FC = (props: any) => {
       const content = message.content.content;
       const sendId = message.userId;
       const type = message.content.type;
+      setSendId(sendId);
       // let pc = this.cache.get(sendId);
       switch (type) {
         case 'Audition:start':
@@ -418,11 +563,14 @@ const Audition: React.FC = (props: any) => {
         case 'Audition:answer':
           setAnswer(content.value);
           break;
-        case 'Audition:selectShow':
-          setSelectShow(true);
-          break;
+        // case 'Audition:selectShow':
+        //   setSelectShow(true);
+        //   break;
         case 'Audition:changeCodeType':
           changeCodeType(content.value);
+          break;
+        case 'Audition:runCode':
+          setIsRunCode(true);
           break;
         case 'Share:open':
           setShare(false);
@@ -569,16 +717,19 @@ const Audition: React.FC = (props: any) => {
         item.exciseType = 'excise';
         return item;
       });
-      setAuditionList((prevState) => [...prevState, ...list]);
+      // setAuditionList((prevState) => [...prevState, ...list]);
       new Promise((resolve) => {
         setAuditionList((prevState) => {
           resolve([...prevState, ...list]);
           return [...prevState, ...list];
         });
       }).then((res: any) => {
+        if (res && res.length == 0) {
+          return;
+        }
         let currentIndex = 0;
         if (contentDetail.content) {
-          currentIndex = contentDetail.content.currentIndex;
+          currentIndex = contentDetail.content.currentIndex || 0;
         }
         console.log(res, 'dfhhfjdhfdjfhjjjjj');
         console.log(currentIndex);
@@ -724,6 +875,7 @@ const Audition: React.FC = (props: any) => {
       },
     };
     im.send(message);
+    console.log(auditionList, 'nnnnnnnnnnnnnnnnn');
     changeNext(currentIndex, auditionList);
   };
 
@@ -794,9 +946,20 @@ const Audition: React.FC = (props: any) => {
 
   const changeCodeType = (value: string) => {
     setCodeType(value);
+    setPratise({
+      exciseType: '',
+      cssId: '',
+      name: '',
+      id: '',
+      type: 0,
+    });
     if (value === 'js') {
-      setCodeValue(`<script>\n</script>`);
-      setValue(`<script>\n</script>`);
+      setCodeValue(
+        `<script>\n  window.log = function (str) {\n    document.write(str);\n  };\n</script>\n<script>\n<!--逻辑代码写在当前标签下-->\n</script>`,
+      );
+      setValue(
+        `<script>\n  window.log = function (str) {\n    document.write(str);\n  };\n</script>\n<script>\n<!--逻辑代码写在当前标签下-->\n</script>`,
+      );
     } else if (value === 'vue') {
       setCodeValue(
         `<script src=\"https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js\"></script>\n\n<div id=\"app\">\n  {{ message }}\n</div>\n<script>\nvar app = new Vue({\n  el: '#app',\n  data: {\n    message: 'Hello Vue!'\n  }\n})\n</script>`,
@@ -818,15 +981,19 @@ const Audition: React.FC = (props: any) => {
     setAnswer(value);
   };
 
-  // 显示自定义面试题下拉列表
-  const changeSelectShow = () => {
-    const message = {
-      type: 'Audition:selectShow',
-      content: {},
-    };
-    im.send(message);
-    setSelectShow(true);
+  const checkAuditionGrade = () => {
+    setAuditionVisible(true);
   };
+
+  // 显示自定义面试题下拉列表
+  // const changeSelectShow = () => {
+  //   const message = {
+  //     type: 'Audition:selectShow',
+  //     content: {},
+  //   };
+  //   im.send(message);
+  //   setSelectShow(true);
+  // };
 
   // 分享屏幕
   const shareScreen = () => {
@@ -849,9 +1016,27 @@ const Audition: React.FC = (props: any) => {
     setStuShare(true);
   };
   const runCode = () => {
+    const message = {
+      type: 'Audition:runCode',
+      content: {},
+    };
+    im.send(message);
     setIsRunCode(true);
   };
-
+  const closeModal = () => {
+    setAuditionVisible(false);
+  };
+  console.log(showCodeValue);
+  const menu = (
+    <Menu>
+      <Menu.Item key="js" onClick={(e) => handleChange('js')}>
+        <span>js</span>
+      </Menu.Item>
+      <Menu.Item key="vue" onClick={(e) => handleChange('vue')}>
+        <span>vue.js</span>
+      </Menu.Item>
+    </Menu>
+  );
   return (
     <div className={styles.playEditor}>
       <div
@@ -871,7 +1056,7 @@ const Audition: React.FC = (props: any) => {
                   run
                 </Button>
               )}
-            {selectShow && (
+            {/* {selectShow && (
               <Select
                 placeholder="选择代码类型"
                 style={{ width: 150 }}
@@ -881,51 +1066,52 @@ const Audition: React.FC = (props: any) => {
               >
                 <Option value="js">原生js</Option>
                 <Option value="vue">vue.js</Option>
-                {/* <Option value="react">react.js</Option> */}
               </Select>
-            )}
+            )} */}
             {currentPratise && currentPratise.cssId && (
               <span className={styles.textTit}>字符数:{codeValue.length}</span>
             )}
           </div>
         </div>
         <div className={styles.leftContent}>
-          {currentPratise &&
-            (currentPratise.exciseType !== 'excise' ? (
-              <CodeMirror
-                value={
-                  interviewStatus === 'activeInterview'
-                    ? codeValue
-                    : showCodeValue
-                }
-                options={{
-                  mode: { name: 'text/css' },
-                  theme: 'duotone-dark',
-                  autofocus: true, //自动获取焦点
-                  styleActiveLine: true, //光标代码高亮
-                  lineNumbers: true, //显示行号
-                  smartIndent: true, //自动缩进
-                  matchBrackets: true, // 匹配括号
-                  autoCloseBrackets: true, // 自动闭合符号
-                  //start-设置支持代码折叠
-                  lineWrapping: false,
-                  foldGutter: true,
-                  readOnly:
-                    interviewStatus === 'activeInterview' || unableEdit
-                      ? 'nocursor'
-                      : false,
-                  gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-                }} //end
-                onChange={changeCode}
-              />
-            ) : (
-              <Excise
-                exciseItem={currentPratise}
-                interviewStatus={interviewStatus}
-                answer={answer}
-                changeAnswer={changeAnswer}
-              ></Excise>
-            ))}
+          {((currentPratise && currentPratise.exciseType !== 'excise') ||
+            codeType === 'js' ||
+            codeType === 'vue') && (
+            <CodeMirror
+              value={
+                interviewStatus === 'activeInterview'
+                  ? codeValue
+                  : showCodeValue
+              }
+              options={{
+                mode: { name: 'text/css' },
+                theme: 'duotone-dark',
+                autofocus: true, //自动获取焦点
+                styleActiveLine: true, //光标代码高亮
+                lineNumbers: true, //显示行号
+                smartIndent: true, //自动缩进
+                matchBrackets: true, // 匹配括号
+                autoCloseBrackets: true, // 自动闭合符号
+                //start-设置支持代码折叠
+                lineWrapping: false,
+                foldGutter: true,
+                readOnly:
+                  interviewStatus === 'activeInterview' || unableEdit
+                    ? 'nocursor'
+                    : false,
+                gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+              }} //end
+              onChange={changeCode}
+            />
+          )}
+          {currentPratise && currentPratise.exciseType === 'excise' && (
+            <Excise
+              exciseItem={currentPratise}
+              interviewStatus={interviewStatus}
+              answer={answer}
+              changeAnswer={changeAnswer}
+            ></Excise>
+          )}
           <div className={styles.btnList}>
             {interviewStatus === 'unactiveInterview' ? (
               !unableEdit ? (
@@ -976,15 +1162,23 @@ const Audition: React.FC = (props: any) => {
                     开始面试
                   </Button>
                 )}
-                <Button type="primary" onClick={changeSelectShow}>
+                <Button type="primary" onClick={checkAuditionGrade}>
+                  查看面试题成绩
+                </Button>
+                <Dropdown
+                  overlay={menu}
+                  placement="topCenter"
+                  trigger={['click']}
+                  arrow
+                >
+                  <Button type="primary">自定义面试题</Button>
+                </Dropdown>
+                {/* <Button type="primary" onClick={changeSelectShow}>
                   自定义面试题
-                </Button>
-                <Button type="primary" onClick={nextProblem}>
-                  收卷
-                </Button>
-                <Button type="primary" onClick={endAudition}>
+                </Button> */}
+                {/* <Button type="primary" onClick={endAudition}>
                   结束面试
-                </Button>
+                </Button> */}
               </>
             )}
           </div>
@@ -1014,7 +1208,8 @@ const Audition: React.FC = (props: any) => {
           currentPratise &&
           (currentPratise.exciseType === 'excise' ? (
             <div className={styles.rightContent}>
-              {auditionList[currentIndex].describe}
+              {auditionList[currentIndex] &&
+                auditionList[currentIndex].describe}
             </div>
           ) : (
             <CssDetail
@@ -1039,6 +1234,12 @@ const Audition: React.FC = (props: any) => {
           <div className={styles.videoContent} id="2"></div>
         </div>
       </div>
+      <AuditionGrade
+        sendId={sendId}
+        auditionVisible={auditionVisible}
+        auditionId={props.match.params.id}
+        closeModal={closeModal}
+      ></AuditionGrade>
     </div>
   );
 };

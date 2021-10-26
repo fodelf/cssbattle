@@ -331,3 +331,69 @@
 .hide {
   display: none;
 }
+.menuContent {
+  background: #fff;
+}
+.modalTitle{
+  margin-top: 10px;
+}
+:global {
+  .ant-modal-body {
+    color: #fff;
+  }
+  .ant-radio-group {
+    color: #fff;
+    .ant-radio-wrapper {
+      color: #fff;
+      .ant-radio-inner {
+        background-color: #272c36;
+        border: 1px #adb5bd solid;
+        outline: none;
+      }
+      &-checked {
+        .ant-radio-inner {
+          background-color: #fb9678;
+          border: 1px solid #fb9678;
+          &::after {
+            background-color: #fff;
+          }
+        }
+      }
+      &-disabled {
+        color: #fff;
+        span {
+          color: #fff;
+        }
+      }
+    }
+  }
+  .ant-checkbox-group {
+    .ant-checkbox-wrapper {
+      color: #fff;
+      .ant-checkbox-inner {
+        background-color: #272c36;
+        border: 1px #adb5bd solid;
+        outline: none;
+      }
+      &-checked {
+        .ant-checkbox-inner {
+          background-color: #fb9678;
+          border: 1px solid #fb9678;
+        }
+      }
+      &-disabled {
+        color: #fff;
+        span {
+          color: #fff;
+        }
+      }
+    }
+  }
+  .ant-input {
+    width: auto;
+    margin-right: 15px;
+    background: #353c48;
+    border: none;
+    color: #ced4da;
+  }
+}

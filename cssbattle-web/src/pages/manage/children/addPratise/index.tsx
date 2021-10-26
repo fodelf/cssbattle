@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-10-05 17:34:18
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-26 09:17:04
+ * @LastEditTime: 2021-10-26 23:30:15
  */
 import { useState, useRef, useEffect } from 'react';
 import {
@@ -111,10 +111,10 @@ const Choice: React.FC<any> = (props: IProps) => {
       initialValues={initialValues}
     >
       <Form.Item label="题目" name="content" rules={[{ required: true }]}>
-        <TextArea rows={4} />
+        <TextArea rows={4} cols={100} />
       </Form.Item>
       <Form.Item label="描述" name="describe">
-        <TextArea rows={4} />
+        <TextArea rows={4} cols={100} />
       </Form.Item>
       {props.type !== '2' && (
         <Form.List

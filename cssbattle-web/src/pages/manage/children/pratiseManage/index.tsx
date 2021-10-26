@@ -4,10 +4,18 @@
  * @Author: pym
  * @Date: 2021-10-05 17:08:11
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-26 09:16:46
+ * @LastEditTime: 2021-10-26 22:33:10
  */
-import { useEffect, useState } from 'react';
-import { Button, Table, Popconfirm, Modal, message } from 'antd';
+import { useEffect, useRef, useState } from 'react';
+import {
+  Button,
+  Table,
+  Popconfirm,
+  Modal,
+  message,
+  Popover,
+  Input,
+} from 'antd';
 import { history } from 'umi';
 import {
   getAuditionExerciseList,
@@ -64,7 +72,7 @@ const PratiseManage: React.FC = (props: any) => {
   const [exciseVisible, setExciseVisible] = useState(false);
   const [selectedRowKeys, setSelected] = useState<any[]>([]);
   const [allExciseList, setAllExciseList] = useState<any[]>([]);
-
+  const auditionRef = useRef(null);
   useEffect(() => {
     queryExciseList();
     queryAllExcise();
@@ -145,7 +153,15 @@ const PratiseManage: React.FC = (props: any) => {
       key: 'createTime',
     },
   ];
-
+  const shareAudition = () => {
+    history.push(`/index/audition/${props.match.params.id}`);
+  };
+  const handleInputSelect = () => {
+    if (auditionRef !== null) {
+      auditionRef.current.input.select();
+      document.execCommand('copy');
+    }
+  };
   return (
     <div>
       <div className={styles.topBtn}>
@@ -154,6 +170,33 @@ const PratiseManage: React.FC = (props: any) => {
         </Button>
         <Button type="primary" onClick={() => setExciseVisible(true)}>
           从面试题库中选择
+        </Button>
+        <Button type="primary">
+          <Popover
+            content={
+              <Input
+                className={styles.shareInput}
+                value={`${location.origin}/index/audition/${props.match.params.id}`}
+                addonAfter={
+                  <span
+                    style={{ cursor: 'pointer' }}
+                    onClick={handleInputSelect}
+                  >
+                    复制
+                  </span>
+                }
+                ref={auditionRef}
+                readOnly
+              />
+            }
+            title="分享面试链接"
+            trigger="click"
+          >
+            <span>分享面试</span>
+          </Popover>
+        </Button>
+        <Button type="primary" onClick={shareAudition}>
+          进入面试
         </Button>
       </div>
       <Table

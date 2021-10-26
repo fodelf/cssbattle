@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-06 22:03:16
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-24 17:09:48
+ * @LastEditTime: 2021-10-26 23:39:31
  */
 package v1
 
@@ -428,11 +428,12 @@ func AuditionCreateExerciseByLib(c *gin.Context) {
 	c.ShouldBind(&AuditionIdExerciseList)
 	timer := time.Now().Format("2006-01-02 15:04:05")
 	mg := database.NewMgo("audition_exercise")
+	mg1 := database.NewMgo("audition_exercise_user")
 	fmt.Println("ExerciseInfo", AuditionIdExerciseList.ExerciseIdList)
 	for _, value := range AuditionIdExerciseList.ExerciseIdList {
 		filter := bson.D{{"_id", value}}
 		var ExerciseInfo InterfaceEntity.ExerciseInfo
-		database.FindOne(mg, filter).Decode(&ExerciseInfo)
+		database.FindOne(mg1, filter).Decode(&ExerciseInfo)
 		fmt.Println("ExerciseInfo", ExerciseInfo)
 		ExerciseInfo.AuditionId = AuditionIdExerciseList.AuditionId
 		ExerciseInfo.Id = primitive.ObjectID.Hex(primitive.NewObjectID())
@@ -701,6 +702,12 @@ func ExerciseSubmit(c *gin.Context) {
 	filter := bson.D{{"auditionid", ExerciseResult.AuditionId}, {"userid", ExerciseResult.UserId}, {"exerciseid", ExerciseResult.ExerciseId}}
 	var ExerciseResult1 InterfaceEntity.ExerciseResult
 	err := database.FindOne(auditionMg, filter).Decode(&ExerciseResult1)
+	var ExerciseUserInfo InterfaceEntity.ExerciseUserInfo
+	mg := database.NewMgo("audition_exercise")
+	filter1 := bson.D{{"_id", ExerciseResult.ExerciseId}}
+	database.FindOne(mg, filter1).Decode(&ExerciseUserInfo)
+	ExerciseResult.RightAnswer = ExerciseUserInfo.Answer
+	ExerciseResult.Options = ExerciseUserInfo.Options
 	if err == mongo.ErrNoDocuments {
 		database.InsertOne(auditionMg, ExerciseResult)
 		appG.Response(http.StatusOK, e.SUCCESS, nil)
@@ -756,4 +763,43 @@ func UpdateAuditionInfo(c *gin.Context) {
 	update := bson.M{"$set": AuditionInfo}
 	_, _ = database.UpdateManyByFilter(auditionMg, filter, update)
 	appG.Response(http.StatusOK, e.SUCCESS, nil)
+}
+
+func GetCSSResultList(c *gin.Context) {
+	appG := app.Gin{C: c}
+	var AuditionCssRInfo InterfaceEntity.AuditionCssRInfo
+	c.ShouldBind(&AuditionCssRInfo)
+	mg := database.NewMgo("audition_css_result")
+	filter := bson.D{{"userid", AuditionCssRInfo.UserId}, {"auditionid", AuditionCssRInfo.Id}}
+	cur, _ := database.QueryAll(mg, "cssid", 100000, -1, filter)
+	var results = make([]InterfaceEntity.AuditionResult, 0)
+	for cur.Next(context.TODO()) {
+		// create a value into which the single document can be decoded
+		var res InterfaceEntity.AuditionResult
+		err := cur.Decode(&res)
+		if err != nil {
+			log.Fatal(err)
+		}
+		results = append(results, res)
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, results)
+}
+func GetExerciseResultList(c *gin.Context) {
+	appG := app.Gin{C: c}
+	var AuditionCssRInfo InterfaceEntity.AuditionCssRInfo
+	c.ShouldBind(&AuditionCssRInfo)
+	mg := database.NewMgo("audition_exercise_result")
+	filter := bson.D{{"userid", AuditionCssRInfo.UserId}, {"auditionid", AuditionCssRInfo.Id}}
+	cur, _ := database.QueryAll(mg, "type", 100000, -1, filter)
+	var results = make([]InterfaceEntity.ExerciseResult, 0)
+	for cur.Next(context.TODO()) {
+		// create a value into which the single document can be decoded
+		var res InterfaceEntity.ExerciseResult
+		err := cur.Decode(&res)
+		if err != nil {
+			log.Fatal(err)
+		}
+		results = append(results, res)
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, results)
 }

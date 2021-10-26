@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-10-07 19:42:34
  * @LastEditors: pym
- * @LastEditTime: 2021-10-24 17:19:14
+ * @LastEditTime: 2021-10-26 22:12:44
  */
 import request from '@/utils/request';
 
@@ -67,6 +67,22 @@ export const getExerciseDetail = (params: Object) => {
 export const updateAuditionInfo = (params: Object) => {
   return request({
     url: '/api/v1/audition/updateAuditionInfo',
+    method: 'post',
+    data: params
+  })
+}
+
+export const getCSSResultList = (params: Object) => {
+  return request({
+    url: '/api/v1/audition/getCSSResultList',
+    method: 'post',
+    data: params
+  })
+}
+
+export const getExerciseResultList = (params: Object) => {
+  return request({
+    url: '/api/v1/audition/getExerciseResultList',
     method: 'post',
     data: params
   })

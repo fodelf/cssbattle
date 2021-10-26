@@ -137,6 +137,11 @@ func InitRouter() *gin.Engine {
 		// 重置面试
 		auditionApi.POST("/updateAuditionInfo", v1.UpdateAuditionInfo)
 
+		// 重置面试
+		auditionApi.POST("/getCSSResultList", v1.GetCSSResultList)
+		// 重置面试
+		auditionApi.POST("/getExerciseResultList", v1.GetExerciseResultList)
+
 	}
 	return r
 }

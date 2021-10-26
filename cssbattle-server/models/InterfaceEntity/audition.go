@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-06 22:05:22
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-24 18:04:52
+ * @LastEditTime: 2021-10-26 22:37:02
  */
 package InterfaceEntity
 
@@ -130,13 +130,15 @@ type AuditionRInfo struct {
 	Id string `json:"id"`
 }
 type ExerciseResult struct {
-	Name       string   `json:"name"`
-	ExerciseId string   `json:"exerciseId"`
-	UserId     string   `json:"userId"`
-	Answer     []string `json:"answer"`
-	IsRight    bool     `json:"isRight"`
-	AuditionId string   `json:"auditionId"`
-	Type       int      `json:"type"`
+	Name        string                   `json:"name"`
+	ExerciseId  string                   `json:"exerciseId"`
+	UserId      string                   `json:"userId"`
+	Answer      []string                 `json:"answer"`
+	RightAnswer []string                 `json:"rightAnswer"`
+	IsRight     bool                     `json:"isRight"`
+	Options     []map[string]interface{} `json:"options"`
+	AuditionId  string                   `json:"auditionId"`
+	Type        int                      `json:"type"`
 }
 type ExerciseDetailResult struct {
 	ExerciseId string `json:"exerciseId"`
@@ -146,4 +148,8 @@ type ExerciseDetailResult struct {
 
 type ExerciseDResult struct {
 	Answer []string `json:"answer"`
+}
+type AuditionCssRInfo struct {
+	UserId string `json:"userId"`
+	Id     string `json:"id"`
 }
