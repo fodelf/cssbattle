@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-09-04 18:20:12
  * @LastEditors: pym
- * @LastEditTime: 2021-09-14 16:56:49
+ * @LastEditTime: 2021-10-16 16:13:02
  */
 import { Menu, Dropdown, Breadcrumb, Button, Avatar } from 'antd';
 import { DownOutlined, UserOutlined } from '@ant-design/icons'
@@ -53,9 +53,9 @@ const Header: React.FC = () => {
     <div className={styles.pageHead}>
       <Breadcrumb>
         {
-          breadRoutes.routes.map(route => {
+          breadRoutes.routes.map((route,index) => {
             return (
-              <Breadcrumb.Item>
+              <Breadcrumb.Item key={index}>
                 <Link to={route.path} style={{color: 'rgb(244, 218, 49)'}}>
                   <i className={styles.logoIndex}></i>
                 </Link>

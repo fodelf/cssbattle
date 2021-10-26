@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-08-27 15:03:49
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-10 17:27:17
+ * @LastEditTime: 2021-10-23 20:09:43
  */
 package database
 
@@ -214,6 +214,16 @@ func UpdateManyByFilter(m Mgo, filter interface{}, update interface{}) (updateRe
 		log.Fatal(err)
 	}
 	fmt.Println("updateResult", updateResult)
+	return updateResult, err
+}
+
+// 更新一个
+func UpdateByFilter(m Mgo, filter interface{}, update interface{}) (updateResult *mongo.UpdateResult, err error) {
+	updateResult, err = m.collection.UpdateMany(context.TODO(), filter, update)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("UpdateByFilter", updateResult)
 	return updateResult, err
 }
 

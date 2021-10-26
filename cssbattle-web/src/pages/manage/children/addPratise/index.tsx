@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-10-05 17:34:18
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-11 09:00:42
+ * @LastEditTime: 2021-10-26 09:17:04
  */
 import { useState, useRef, useEffect } from 'react';
 import {
@@ -60,14 +60,16 @@ const Choice: React.FC<any> = (props: IProps) => {
 
   const onFinish = (values: any) => {
     console.log(values);
-    let options = values.choiceContent.map((item: any, index: number) => {
-      return {
-        key: String.fromCharCode(65 + index),
-        des: item,
-      };
-    });
+    let options = (values.choiceContent || []).map(
+      (item: any, index: number) => {
+        return {
+          key: String.fromCharCode(65 + index),
+          des: item,
+        };
+      },
+    );
     let params = {
-      name: props.name || '题目1',
+      name: props.name || '面试题1',
       type: parseFloat(props.type),
       content: values.content,
       options: options,
@@ -84,7 +86,7 @@ const Choice: React.FC<any> = (props: IProps) => {
 
   const addExcise = (params: any) => {
     createExercise(params).then((res) => {
-      message.success('新增题目成功');
+      message.success('新增面试题成功');
       history.push(`/index/detail/${props.match.params.id}/pratiseManage`);
     });
   };
@@ -94,7 +96,7 @@ const Choice: React.FC<any> = (props: IProps) => {
       ...params,
       id: location.search.split('=')[1],
     }).then((res) => {
-      message.success('更新题目成功');
+      message.success('更新面试题成功');
       history.push(`/index/detail/${props.match.params.id}/pratiseManage`);
     });
   };
@@ -205,7 +207,7 @@ const Choice: React.FC<any> = (props: IProps) => {
               );
             })}
           </Radio.Group>
-        ) : (
+        ) : props.type === '1' ? (
           <Checkbox.Group>
             {choiceList.map((item, index) => {
               return (
@@ -215,6 +217,8 @@ const Choice: React.FC<any> = (props: IProps) => {
               );
             })}
           </Checkbox.Group>
+        ) : (
+          <TextArea rows={4} />
         )}
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 3, span: 15 }}>
@@ -280,12 +284,12 @@ const AddPraise: React.FC = (props: any) => {
         <p>
           {isEdit ? (
             <Input
-              placeholder="请输入题目名称"
+              placeholder="请输入面试题名称"
               onPressEnter={confirmName}
             ></Input>
           ) : (
             <>
-              <span>{name || '题目1'}</span>
+              <span>{name || '面试题1'}</span>
               <EditOutlined title="编辑" onClick={changeStatus} />
             </>
           )}

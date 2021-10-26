@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-06 22:05:22
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-10 18:12:57
+ * @LastEditTime: 2021-10-24 18:04:52
  */
 package InterfaceEntity
 
@@ -13,16 +13,24 @@ type BaseInfo struct {
 	CreateTime string `json:"createTime"`
 	ModifyTime string `json:"modifyTime"`
 }
+type AuditionInfoChildInfo struct {
+	Id      string                 `json:"id" `
+	Type    int                    `json:"type"`
+	Content map[string]interface{} `json:"content"`
+}
 
 //面试实体
 type AuditionInfo struct {
-	Name       string `json:"name"`
-	CreateTime string `json:"createTime"`
-	ModifyTime string `json:"modifyTime"`
-	UserId     string `json:"userId"`
-	Count      int    `json:"count"`
-	Type       int    `json:"type"`
-	Id         string `json:"id" bson:"_id"`
+	Name            string                `json:"name"`
+	StartTime       string                `json:"startTime"`
+	CreateTime      string                `json:"createTime"`
+	ModifyTime      string                `json:"modifyTime"`
+	UserId          string                `json:"userId"`
+	Count           int                   `json:"count"`
+	Type            int                   `json:"type"`
+	Id              string                `json:"id" bson:"_id"`
+	State           int                   `json:"state"`
+	AuditionMesInfo AuditionInfoChildInfo `json:"auditionInfo"`
 }
 
 // 面试查询条件实体
@@ -103,6 +111,17 @@ type ExerciseUserInfo struct {
 	Describe   string                   `json:"describe"`
 	UserId     string                   `json:"userId"`
 }
+type ExerciseRInfo struct {
+	Id         string                   `json:"id" bson:"_id"`
+	CreateTime string                   `json:"createTime"`
+	ModifyTime string                   `json:"modifyTime"`
+	Name       string                   `json:"name"`
+	Type       int                      `json:"type"`
+	Content    string                   `json:"content"`
+	Options    []map[string]interface{} `json:"options"`
+	Describe   string                   `json:"describe"`
+	UserId     string                   `json:"userId"`
+}
 type AuditionIdExerciseList struct {
 	AuditionId     string   `json:"auditionId"`
 	ExerciseIdList []string `json:"exerciseIdList"`
@@ -118,4 +137,13 @@ type ExerciseResult struct {
 	IsRight    bool     `json:"isRight"`
 	AuditionId string   `json:"auditionId"`
 	Type       int      `json:"type"`
+}
+type ExerciseDetailResult struct {
+	ExerciseId string `json:"exerciseId"`
+	UserId     string `json:"userId"`
+	AuditionId string `json:"auditionId"`
+}
+
+type ExerciseDResult struct {
+	Answer []string `json:"answer"`
 }

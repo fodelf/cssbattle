@@ -124,6 +124,19 @@ func InitRouter() *gin.Engine {
 		// 创建面试css
 		auditionApi.POST("/deleteAudition", v1.DeleteAudition)
 
+		// 开始面试
+		auditionApi.POST("/startAudition", v1.StartAudition)
+		// 结束面试
+		auditionApi.POST("/endAudition", v1.EndAudition)
+		// 重置面试
+		auditionApi.POST("/refreshAudition", v1.RefreshAudition)
+		// 重置面试
+		auditionApi.POST("/exerciseSubmit", v1.ExerciseSubmit)
+		// 重置面试
+		auditionApi.POST("/getExerciseDetail", v1.GetExerciseDetail)
+		// 重置面试
+		auditionApi.POST("/updateAuditionInfo", v1.UpdateAuditionInfo)
+
 	}
 	return r
 }

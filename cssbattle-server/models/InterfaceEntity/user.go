@@ -91,3 +91,10 @@ type UserInfo struct {
 	Cssbattle_79 float32 `json:"cssbattle_79"`
 	Cssbattle_80 float32 `json:"cssbattle_80"`
 }
+type UserQueryInfo struct {
+	Id       string  `json:"id" bson:"_id"`
+	UserName string  `json:"userName"`
+	UserIcon string  `json:"userIcon"`
+	Score    float32 `json:"score"`
+	Target   int     `json:"target"`
+}

@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:39:09
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-22 09:36:14
+ * @LastEditTime: 2021-10-26 09:27:44
  */
 import { Button, List, Skeleton, Avatar, Tag } from 'antd';
 import { getImgList, getBattleTypeList, getRankList } from '@/api/home';
@@ -198,7 +198,7 @@ const Home: React.FC = () => {
       getUserInfo({
         token,
       }).then((res) => {
-        if (res.data.data.userId) {
+        if (res.data.data.UserId) {
           localStorage.setItem('userId', res.data.data.UserId);
         } else {
           localStorage.setItem('userId', `${new Date().getTime()}`);

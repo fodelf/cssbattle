@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-10-07 11:20:14
  * @LastEditors: pym
- * @LastEditTime: 2021-10-10 19:32:07
+ * @LastEditTime: 2021-10-24 11:11:34
  */
 import request from '@/utils/request';
 
@@ -26,6 +26,14 @@ export const createAudition = (params: Object) => {
 export const deleteAudition = (params: Object) => {
   return request({
     url: '/api/v1/audition/deleteAudition',
+    method: 'post',
+    data: params
+  })
+}
+
+export const refreshAudition = (params: Object) => {
+  return request({
+    url: '/api/v1/audition/refreshAudition',
     method: 'post',
     data: params
   })

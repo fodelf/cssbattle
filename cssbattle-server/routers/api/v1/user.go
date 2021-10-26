@@ -141,10 +141,10 @@ func Sort(c *gin.Context) {
 	if err != nil {
 		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
 	} else {
-		var results []*InterfaceEntity.UserInfo
+		var results []*InterfaceEntity.UserQueryInfo
 		for cur.Next(context.TODO()) {
 			// create a value into which the single document can be decoded
-			var user InterfaceEntity.UserInfo
+			var user InterfaceEntity.UserQueryInfo
 			err := cur.Decode(&user)
 			if err != nil {
 				log.Fatal(err)

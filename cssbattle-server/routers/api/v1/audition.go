@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-06 22:03:16
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-10 20:59:10
+ * @LastEditTime: 2021-10-24 17:09:48
  */
 package v1
 
@@ -399,13 +399,13 @@ func GetExerciseList(c *gin.Context) {
 	//如果不存在token
 	// if Token != "null" {
 	mg := database.NewMgo("audition_exercise_user")
-	var results = make([]InterfaceEntity.ExerciseUserInfo, 0)
+	var results = make([]InterfaceEntity.ExerciseRInfo, 0)
 	user, _ := jwt.ParseToken(Token)
 	filter := bson.D{{"userid", user.UserId}}
 	cur, _ := database.QueryAll(mg, "createtime", 100000, -1, filter)
 	for cur.Next(context.TODO()) {
 		// create a value into which the single document can be decoded
-		var res InterfaceEntity.ExerciseUserInfo
+		var res InterfaceEntity.ExerciseRInfo
 		err := cur.Decode(&res)
 		if err != nil {
 			log.Fatal(err)
@@ -601,4 +601,159 @@ func AuditionExerciseCompare(c *gin.Context) {
 		}
 	}
 
+}
+
+// @Tags  面试模块
+// @Summary 开始面试
+// @Description 上传代码以及图片id获取得分
+// @Accept  json
+// @Produce  json
+// @Param id path string true "id"  面试id
+// @Router /api/v1/audition/startAudition [post]
+
+func StartAudition(c *gin.Context) {
+	appG := app.Gin{C: c}
+	var AuditionRInfo InterfaceEntity.AuditionRInfo
+	c.ShouldBind(&AuditionRInfo)
+	mg := database.NewMgo("audition")
+	filter := bson.D{{"_id", AuditionRInfo.Id}}
+	timer := time.Now().Format("2006-01-02 15:04:05")
+	var AuditionInfo InterfaceEntity.AuditionInfo
+	database.FindOne(mg, filter).Decode(&AuditionInfo)
+	AuditionInfo.StartTime = timer
+	AuditionInfo.State = 1
+	fmt.Println("AuditionInfo", AuditionInfo)
+	update := bson.M{"$set": AuditionInfo}
+	_, err := database.UpdateByFilter(mg, filter, update)
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ERROR_EXE_UPDATE, nil)
+	} else {
+		appG.Response(http.StatusOK, e.SUCCESS, nil)
+	}
+}
+
+// @Tags  面试模块
+// @Summary 结束面试
+// @Description 上传代码以及图片id获取得分
+// @Accept  json
+// @Produce  json
+// @Param id path string true "id"  面试id
+// @Router /api/v1/audition/startAudition [post]
+func EndAudition(c *gin.Context) {
+	appG := app.Gin{C: c}
+	var AuditionRInfo InterfaceEntity.AuditionRInfo
+	c.ShouldBind(&AuditionRInfo)
+	mg := database.NewMgo("audition")
+	filter := bson.D{{"_id", AuditionRInfo.Id}}
+	var AuditionInfo InterfaceEntity.AuditionInfo
+	fmt.Println("AuditionInfo", AuditionInfo)
+	database.FindOne(mg, filter).Decode(&AuditionInfo)
+	AuditionInfo.State = 2
+	AuditionInfo.Count = AuditionInfo.Count + 1
+	update := bson.M{"$set": AuditionInfo}
+	_, err := database.UpdateByFilter(mg, filter, update)
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ERROR_EXE_UPDATE, nil)
+	} else {
+		appG.Response(http.StatusOK, e.SUCCESS, nil)
+	}
+}
+
+// @Tags  面试模块
+// @Summary 重置面试
+// @Description 上传代码以及图片id获取得分
+// @Accept  json
+// @Produce  json
+// @Param id path string true "id"  面试id
+// @Router /api/v1/audition/startAudition [post]
+func RefreshAudition(c *gin.Context) {
+	appG := app.Gin{C: c}
+	var AuditionRInfo InterfaceEntity.AuditionRInfo
+	c.ShouldBind(&AuditionRInfo)
+	mg := database.NewMgo("audition")
+	filter := bson.D{{"_id", AuditionRInfo.Id}}
+	var AuditionInfo InterfaceEntity.AuditionInfo
+	database.FindOne(mg, filter).Decode(&AuditionInfo)
+	AuditionInfo.State = 0
+	update := bson.M{"$set": AuditionInfo}
+	_, err := database.UpdateManyByFilter(mg, filter, update)
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ERROR_EXE_UPDATE, nil)
+	} else {
+		appG.Response(http.StatusOK, e.SUCCESS, nil)
+	}
+}
+
+// @Tags  图片模块
+// @Summary 图片比较得分
+// @Description 上传代码以及图片id获取得分
+// @Accept  json
+// @Produce  json
+// @Param code path string true "code"  编辑器代码
+// @Param id path string true "id"  图片id
+// @Success 200 {object} InterfaceEntity.Score Result 成功后返回值
+// @Router /api/v1/img/imgCompare [post]
+func ExerciseSubmit(c *gin.Context) {
+	appG := app.Gin{C: c}
+	var ExerciseResult InterfaceEntity.ExerciseResult
+	c.ShouldBind(&ExerciseResult)
+	auditionMg := database.NewMgo("audition_exercise_result")
+	filter := bson.D{{"auditionid", ExerciseResult.AuditionId}, {"userid", ExerciseResult.UserId}, {"exerciseid", ExerciseResult.ExerciseId}}
+	var ExerciseResult1 InterfaceEntity.ExerciseResult
+	err := database.FindOne(auditionMg, filter).Decode(&ExerciseResult1)
+	if err == mongo.ErrNoDocuments {
+		database.InsertOne(auditionMg, ExerciseResult)
+		appG.Response(http.StatusOK, e.SUCCESS, nil)
+	} else {
+		update := bson.M{"$set": ExerciseResult}
+		_, _ = database.UpdateManyByFilter(auditionMg, filter, update)
+		appG.Response(http.StatusOK, e.SUCCESS, nil)
+	}
+}
+
+// @Tags  图片模块
+// @Summary 图片比较得分
+// @Description 上传代码以及图片id获取得分
+// @Accept  json
+// @Produce  json
+// @Param code path string true "code"  编辑器代码
+// @Param id path string true "id"  图片id
+// @Success 200 {object} InterfaceEntity.Score Result 成功后返回值
+// @Router /api/v1/img/imgCompare [post]
+func GetExerciseDetail(c *gin.Context) {
+	appG := app.Gin{C: c}
+	var ExerciseDetailResult InterfaceEntity.ExerciseDetailResult
+	c.ShouldBind(&ExerciseDetailResult)
+	mg := database.NewMgo("audition_exercise_result")
+	filter := bson.D{{"auditionid", ExerciseDetailResult.AuditionId}, {"userid", ExerciseDetailResult.UserId}, {"exerciseid", ExerciseDetailResult.ExerciseId}}
+	var ExerciseResult1 InterfaceEntity.ExerciseDResult
+	err := database.FindOne(mg, filter).Decode(&ExerciseResult1)
+	if err == mongo.ErrNoDocuments {
+		appG.Response(http.StatusOK, e.SUCCESS, []string{})
+	} else {
+		appG.Response(http.StatusOK, e.SUCCESS, ExerciseResult1)
+	}
+}
+
+// @Tags  图片模块
+// @Summary 图片比较得分
+// @Description 上传代码以及图片id获取得分
+// @Accept  json
+// @Produce  json
+// @Param code path string true "code"  编辑器代码
+// @Param id path string true "id"  图片id
+// @Success 200 {object} InterfaceEntity.Score Result 成功后返回值
+// @Router /api/v1/img/imgCompare [post]
+func UpdateAuditionInfo(c *gin.Context) {
+	appG := app.Gin{C: c}
+	var AuditionInfoChildInfo InterfaceEntity.AuditionInfoChildInfo
+	c.ShouldBind(&AuditionInfoChildInfo)
+	auditionMg := database.NewMgo("audition")
+	filter := bson.D{{"_id", AuditionInfoChildInfo.Id}}
+	var AuditionInfo InterfaceEntity.AuditionInfo
+	database.FindOne(auditionMg, filter).Decode(&AuditionInfo)
+	AuditionInfo.AuditionMesInfo = AuditionInfoChildInfo
+	update := bson.M{"$set": AuditionInfo}
+	_, _ = database.UpdateManyByFilter(auditionMg, filter, update)
+	appG.Response(http.StatusOK, e.SUCCESS, nil)
 }

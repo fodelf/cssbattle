@@ -16,11 +16,83 @@
       margin-right: 15px;
     }
   }
-
+  .share {
+    flex: 1;
+    height: 100%;
+  }
   .playLeft {
     flex: 1;
     height: 100%;
 
+    .exciseRow {
+      width: 100%;
+      margin: 20px 0;
+      color: #fff;
+      font-size: 16px;
+      .leftCol {
+        text-align: right;
+      }
+      .rightCol {
+        text-align: left;
+        :global {
+          .ant-radio-group {
+            color: #fff;
+            .ant-radio-wrapper {
+              color: #fff;
+              .ant-radio-inner {
+                background-color: #272c36;
+                border: 1px #adb5bd solid;
+                outline: none;
+              }
+              &-checked {
+                .ant-radio-inner {
+                  background-color: #fb9678;
+                  border: 1px solid #fb9678;
+                  &::after {
+                    background-color: #fff;
+                  }
+                }
+              }
+              &-disabled {
+                color: #fff;
+                span {
+                  color: #fff;
+                }
+              }
+            }
+          }
+          .ant-checkbox-group {
+            .ant-checkbox-wrapper {
+              color: #fff;
+              .ant-checkbox-inner {
+                background-color: #272c36;
+                border: 1px #adb5bd solid;
+                outline: none;
+              }
+              &-checked {
+                .ant-checkbox-inner {
+                  background-color: #fb9678;
+                  border: 1px solid #fb9678;
+                }
+              }
+              &-disabled {
+                color: #fff;
+                span {
+                  color: #fff;
+                }
+              }
+            }
+          }
+          .ant-input {
+            width: auto;
+            margin-right: 15px;
+            background: #353c48;
+            border: none;
+            color: #ced4da;
+          }
+        }
+      }
+    }
     .leftContent {
       height: calc(100% - 35px);
       background: rgba(19, 24, 28, 0.95);
@@ -66,15 +138,11 @@
       box-sizing: border-box;
       border-left: 1px #27313a solid;
       overflow-y: auto;
+      color: #fff;
       .videoContent {
         width: 400px;
         height: 300px;
         object-fit: fill;
-      }
-      :global {
-        .ant-divider {
-          background: #323f4a;
-        }
       }
     }
     :global {
@@ -259,4 +327,7 @@
       }
     }
   }
+}
+.hide {
+  display: none;
 }

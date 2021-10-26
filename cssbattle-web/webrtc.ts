@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-17 19:05:39
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-25 21:08:49
+ * @LastEditTime: 2021-10-24 17:58:46
  */
 type WebRtcOptions = {
   im: any;
@@ -49,17 +49,6 @@ class WebRtc {
             },
           };
           this.im.send(message);
-          break;
-        case 'WebRtc:share':
-          // await this.newPC(`${this.userId}_${sendId}`);
-          await this.newPC(content.displayId, 'teacherShare');
-          const shareMessage = {
-            type: 'WebRtc:replayBack',
-            content: {
-              displayId: content.displayId,
-            },
-          };
-          this.im.send(shareMessage);
           break;
         case 'WebRtc:replay':
           // await this.newPC(`${this.userId}_${sendId}`);
@@ -195,7 +184,7 @@ class WebRtc {
       }
     });
   }
-  public async newPC(sendId: string, newWithOffer?: string, streamIN?: any) {
+  public async newPC(sendId: string, newWithOffer?: string) {
     const config = {
       configuration: {
         offerToReceiveAudio: true,
@@ -226,13 +215,13 @@ class WebRtc {
       },
       video: true,
     };
-    if (streamIN) {
-      pc.addStream(streamIN);
-    } else {
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      pc.addStream(stream);
-    }
-
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    // const video = document.getElementById('1') as HTMLVideoElement;
+    // video.srcObject = stream;
+    // video.onloadedmetadata = function (e) {
+    //   video.play();
+    // };
+    pc.addStream(stream);
     // const constraints = {
     //   audio: true,
     //   video: true,
@@ -273,17 +262,11 @@ class WebRtc {
     pc.onaddstream = (e: any) => {
       console.log('渲染视频', e);
       var videoContent = document.getElementById('2') as HTMLElement;
-      if (newWithOffer == 'teacherShare') {
-        videoContent = document.getElementById('share') as HTMLElement;
-      } else {
-        videoContent = document.getElementById('2') as HTMLElement;
-      }
       videoContent.innerHTML = '';
       const video = document.createElement('video');
       videoContent.appendChild(video);
       video.style.height = '100%';
       video.style.width = '100%';
-      video.style['object-fit'] = 'cover';
       video.srcObject = e.stream;
       // video.play();
       video.onloadedmetadata = function (e) {
@@ -292,24 +275,50 @@ class WebRtc {
       };
     };
     this.cache.set(sendId, pc);
+    // if (newWithOffer == 'call') {
+    //   const offerOptions1 = {
+    //     offerToReceiveAudio: 1,
+    //     offerToReceiveVideo: 1,
+    //   } as any;
+    //   const offer = await pc.createOffer(offerOptions1);
+    //   // 设置本地
+    //   await pc.setLocalDescription(offer);
+    //   const mes = {
+    //     type: 'WebRtc:RTCOffer',
+    //     content: {
+    //       sdp: offer.sdp,
+    //     },
+    //   };
+    //   this.im.send(mes);
+    // }
+    // console.log("onaddstream", e);
+    // const video = document.getElementById('2') as HTMLVideoElement;
+    // video.srcObject = e.stream;
+    // video.play();
+    // video.onloadedmetadata = function (e) {
+    //   video.play();
+    // };
+    // debugger;
+    // };
+    // if (isAddRemote) {
+    //   // 创建offer
+    //   const offer = await pc.createOffer(offerOptions);
+    //   // 设置本地
+    //   await pc.setLocalDescription(offer);
+    //   const mes = {
+    //     type: 'WebRtc:RTCOffer',
+    //     content: {
+    //       sdp: offer.sdp,
+    //     },
+    //   };
+    //   this.im.send(mes);
+    // }
     return pc;
   }
   public async share() {
-    const stream = await navigator.mediaDevices.getDisplayMedia();
-    if (stream) {
-      await this.newPC(`${this.userId}_share`, 'share', stream);
-      const message = {
-        type: 'WebRtc:share',
-        content: {
-          displayId: `${this.userId}_share`,
-        },
-      };
-      this.im.send(message);
-      return true;
-    } else {
-      return false;
-    }
-    // await navigator.mediaDevices.getDisplayMedia();
+    this.cache.forEach((value, key) => {
+      // await navigator.mediaDevices.getDisplayMedia();
+    });
   }
 }
 

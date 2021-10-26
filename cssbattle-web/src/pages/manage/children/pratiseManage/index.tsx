@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-10-05 17:08:11
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-11 09:01:10
+ * @LastEditTime: 2021-10-26 09:16:46
  */
 import { useEffect, useState } from 'react';
 import { Button, Table, Popconfirm, Modal, message } from 'antd';
@@ -27,7 +27,7 @@ interface DataType {
 const PratiseManage: React.FC = (props: any) => {
   const columns = [
     {
-      title: '题目名称',
+      title: '面试题名称',
       dataIndex: 'name',
     },
     {
@@ -114,7 +114,7 @@ const PratiseManage: React.FC = (props: any) => {
       auditionId: props.match.params.id,
     };
     createExerciseByLib(params).then((res) => {
-      message.success('添加题目成功');
+      message.success('添加面试成功');
       setExciseVisible(false);
       queryExciseList();
     });
@@ -130,7 +130,7 @@ const PratiseManage: React.FC = (props: any) => {
 
   const exciseColumns = [
     {
-      title: '题目名称',
+      title: '面试名称',
       dataIndex: 'name',
       key: 'name',
     },
@@ -150,10 +150,10 @@ const PratiseManage: React.FC = (props: any) => {
     <div>
       <div className={styles.topBtn}>
         <Button type="primary" onClick={addPratise}>
-          自定义题目
+          自定义面试题
         </Button>
         <Button type="primary" onClick={() => setExciseVisible(true)}>
-          从题目库中选择
+          从面试题库中选择
         </Button>
       </div>
       <Table
@@ -164,7 +164,7 @@ const PratiseManage: React.FC = (props: any) => {
         locale={{ emptyText: '暂无数据' }}
       />
       <Modal
-        title="选择题目"
+        title="选择面试题"
         width={800}
         visible={exciseVisible}
         onOk={submitExcise}
