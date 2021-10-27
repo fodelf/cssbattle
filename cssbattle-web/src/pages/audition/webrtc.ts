@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-17 19:05:39
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-25 21:08:49
+ * @LastEditTime: 2021-10-27 09:05:44
  */
 type WebRtcOptions = {
   im: any;
@@ -295,20 +295,25 @@ class WebRtc {
     return pc;
   }
   public async share() {
-    const stream = await navigator.mediaDevices.getDisplayMedia();
-    if (stream) {
-      await this.newPC(`${this.userId}_share`, 'share', stream);
-      const message = {
-        type: 'WebRtc:share',
-        content: {
-          displayId: `${this.userId}_share`,
-        },
-      };
-      this.im.send(message);
-      return true;
-    } else {
+    try {
+      const stream = await navigator.mediaDevices.getDisplayMedia();
+      if (stream) {
+        await this.newPC(`${this.userId}_share`, 'share', stream);
+        const message = {
+          type: 'WebRtc:share',
+          content: {
+            displayId: `${this.userId}_share`,
+          },
+        };
+        this.im.send(message);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
       return false;
     }
+
     // await navigator.mediaDevices.getDisplayMedia();
   }
 }
