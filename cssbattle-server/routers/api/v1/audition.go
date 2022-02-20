@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-06 22:03:16
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-26 23:39:31
+ * @LastEditTime: 2022-02-08 23:09:50
  */
 package v1
 
@@ -217,8 +217,9 @@ func AuditionIMGCompare(c *gin.Context) {
 	chars := utf8.RuneCountInString(str)
 	fmt.Println("chars", chars)
 	id := imgContent.Id
-	mg := database.NewMgo("cssbattle_" + id)
-	scale, _ := database.FindSort(mg, "chars", chars)
+	mg := database.NewMgo("cssbattle")
+	cssbattleFilter := bson.D{{"imgid", id}}
+	scale, _ := database.FindSort(mg, "chars", chars, cssbattleFilter)
 	// fmt.Println(scale)
 	imgContent.Scale = scale
 	b, _ := json.Marshal(imgContent)
@@ -562,8 +563,9 @@ func AuditionExerciseCompare(c *gin.Context) {
 	chars := utf8.RuneCountInString(str)
 	fmt.Println("chars", chars)
 	id := imgContent.Id
-	mg := database.NewMgo("cssbattle_" + id)
-	scale, _ := database.FindSort(mg, "chars", chars)
+	mg := database.NewMgo("cssbattle")
+	cssbattleFilter := bson.D{{"imgid", id}}
+	scale, _ := database.FindSort(mg, "chars", chars, cssbattleFilter)
 	// fmt.Println(scale)
 	imgContent.Scale = scale
 	b, _ := json.Marshal(imgContent)

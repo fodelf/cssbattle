@@ -21,10 +21,10 @@ func InitRouter() *gin.Engine {
 	r.Use(auth.Auth())
 	// proxyMiddle := r.Group("/*")
 	// proxyMiddle.Use(proxy.ReverseProxy())
-	r.LoadHTMLGlob("web/*.html")          // 添加入口index.html
-	r.LoadHTMLFiles("web/static/*/*")     // 添加资源路径
-	r.Static("/static", "web/static")     // 添加资源路径
-	r.StaticFile("/ui", "web/index.html") // 前端接口
+	// r.LoadHTMLGlob("web/*.html")          // 添加入口index.html
+	// r.LoadHTMLFiles("web/static/*/*")     // 添加资源路径
+	// r.Static("/static", "web/static")     // 添加资源路径
+	// r.StaticFile("/ui", "web/index.html") // 前端接口
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.MaxMultipartMemory = 1 // 上传文件大小限制
 	apiRoot := r.Group("/api/v1")

@@ -19,9 +19,20 @@ async function buildDocker() {
   try {
     await run('docker', ['rmi', 'fodelf/cssbattle-server'], { cwd: cwd });
   } catch (error) {}
-  await run('docker', ['build', '-t', 'fodelf/cssbattle-server', '.'], {
-    cwd: cwd,
-  });
+  await run(
+    'docker',
+    [
+      'build',
+      '-t',
+      'fodelf/cssbattle-server',
+      '--platform',
+      'linux/amd64',
+      '.',
+    ],
+    {
+      cwd: cwd,
+    },
+  );
   await run('docker', ['push', 'fodelf/cssbattle-server']);
 }
 

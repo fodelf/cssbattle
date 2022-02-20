@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-02 10:18:56
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-16 17:44:09
+ * @LastEditTime: 2022-02-16 21:56:22
  */
 package main
 
@@ -19,6 +19,7 @@ import (
 )
 
 func receiveClientRequest(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("sdsdsds")
 	w.Header().Set("Access-Control-Allow-Origin", "*")             //允许访问所有域
 	w.Header().Add("Access-Control-Allow-Headers", "Content-Type") //header的类型
 	w.Header().Set("content-type", "application/json")             //返回数据格式是json

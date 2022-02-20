@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:39:09
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-26 22:59:14
+ * @LastEditTime: 2022-02-07 20:54:10
  */
 import { Button, List, Skeleton, Avatar, Tag } from 'antd';
 import { getImgList, getBattleTypeList, getRankList } from '@/api/home';

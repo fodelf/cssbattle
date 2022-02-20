@@ -111,8 +111,9 @@ func IMGCompare(c *gin.Context) {
 	chars := utf8.RuneCountInString(str)
 	fmt.Println("chars", chars)
 	id := imgContent.Id
-	mg := database.NewMgo("cssbattle_" + id)
-	scale, _ := database.FindSort(mg, "chars", chars)
+	mg := database.NewMgo("cssbattle")
+	filter := bson.D{{"imgid", id}}
+	scale, _ := database.FindSort(mg, "chars", chars, filter)
 	// fmt.Println(scale)
 	imgContent.Scale = scale
 	b, _ := json.Marshal(imgContent)
@@ -139,7 +140,7 @@ func IMGCompare(c *gin.Context) {
 	//如果不存在token
 	if Token != "" {
 		user, _ := jwt.ParseToken(Token)
-		filter := bson.D{{"username", user.UserName}}
+		filter := bson.D{{"userId", user.UserId}}
 		var userImg InterfaceEntity.UserImg
 		database.FindOne(mg, filter).Decode(&userImg)
 		userMg := database.NewMgo("user")
@@ -149,10 +150,12 @@ func IMGCompare(c *gin.Context) {
 		cssString := "Cssbattle_" + id
 		if userImg.UserName == "" {
 			userImg.Chars = chars
+			userImg.ImgId = id
 			userImg.Match = tempMap["match"]
 			userImg.Score = tempMap["score"]
 			userImg.UserName = user.UserName
 			userImg.UserIcon = user.UserIcon
+			userImg.UserId = user.UserId
 			userImg.Code = imgContent.Code
 			_, _ = database.InsertOne(mg, userImg)
 			update := bson.D{
@@ -170,8 +173,10 @@ func IMGCompare(c *gin.Context) {
 			userImg.Chars = chars
 			userImg.Match = tempMap["match"]
 			userImg.Score = tempMap["score"]
+			userImg.ImgId = id
 			userImg.UserName = user.UserName
 			userImg.UserIcon = user.UserIcon
+			userImg.UserId = user.UserId
 			userImg.Code = imgContent.Code
 			t := reflect.TypeOf(userImgInfo)
 			v := reflect.ValueOf(userImgInfo)
@@ -244,6 +249,7 @@ func GetImgDetail(c *gin.Context) {
 	filter := bson.D{{"id", intId}}
 	var imgInfo InterfaceEntity.ImgInfo
 	database.FindOne(mg, filter).Decode(&imgInfo)
+	fmt.Println("imgInfo", imgInfo)
 	appG.Response(http.StatusOK, e.SUCCESS, imgInfo)
 }
 
@@ -257,7 +263,8 @@ func GetImgDetail(c *gin.Context) {
 func GetCssbattleTypeList(c *gin.Context) {
 	appG := app.Gin{C: c}
 	mg := database.NewMgo("cssbattleType")
-	cur, err := database.FindAll(mg, "type", 100, -1)
+	filter := bson.D{}
+	cur, err := database.FindAll(mg, "type", 100, -1, filter)
 	if err != nil {
 		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
 	} else {
@@ -312,9 +319,9 @@ func GetUserImgDetail(c *gin.Context) {
 	var userImg InterfaceEntity.UserImg
 	if Token != "" {
 		id := c.Query("id")
-		mg := database.NewMgo("cssbattle_" + id)
+		mg := database.NewMgo("cssbattle")
 		user, _ := jwt.ParseToken(Token)
-		filter := bson.D{{"username", user.UserName}}
+		filter := bson.D{{"userId", user.UserId}, {"imgid", id}}
 		var userImg InterfaceEntity.UserImg
 		database.FindOne(mg, filter).Decode(&userImg)
 		appG.Response(http.StatusOK, e.SUCCESS, userImg)

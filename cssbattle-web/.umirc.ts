@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:39:09
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-26 09:07:33
+ * @LastEditTime: 2022-02-16 21:57:25
  */
 import { defineConfig } from 'umi';
 import routes from './src/router/index';
@@ -45,6 +45,11 @@ export default defineConfig({
       ? 'https://cdn.wuwenzhou.com.cn/web/0.0.44/'
       : '/',
   proxy: {
+    '/api/v1/im': {
+      target: 'http://127.0.0.1:9528/', //代理的地址
+      // pathRewrite: { '^/api': '' },
+      changeOrigin: true,
+    },
     '/api': {
       target: 'http://127.0.0.1:9527/', //代理的地址
       // pathRewrite: { '^/api': '' },

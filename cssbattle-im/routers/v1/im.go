@@ -39,9 +39,12 @@ func Join(writer http.ResponseWriter, request *http.Request) {
 	fmt.Println(params["userId"], params["roomId"])
 	roomId := params["roomId"]
 	userId := params["userId"]
+	// isInterviewer := params["isInterviewer"]
 	IMMg := database.NewMgo("im")
 	fmt.Println("roomId---------------------", roomId)
 	fmt.Println("userId---------------------", userId)
+	// 如果不是面试官直播间里面不允许超过两个人
+	// if
 	roomFilter := bson.D{{"roomid", roomId}}
 	var ImInfo InterfaceEntity.IMInfo
 	database.FindOne(IMMg, roomFilter).Decode(&ImInfo)

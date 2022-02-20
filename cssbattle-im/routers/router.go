@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-02 10:36:35
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-20 22:58:18
+ * @LastEditTime: 2022-02-16 22:10:10
  */
 package router
 
@@ -208,7 +208,6 @@ func sendproc(node *Node) {
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println("write stop")
-
 		}
 	}()
 	defer func() {

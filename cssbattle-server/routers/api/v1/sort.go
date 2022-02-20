@@ -10,6 +10,7 @@ import (
 	"github.com/fodelf/cssbattle/models/InterfaceEntity"
 	"github.com/fodelf/cssbattle/pkg/e"
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 // @Tags  排行模块
@@ -23,8 +24,9 @@ import (
 func SortById(c *gin.Context) {
 	appG := app.Gin{C: c}
 	id := c.Query("id")
-	mg := database.NewMgo("cssbattle_" + id)
-	cur, err := database.FindAll(mg, "score", 10, -1)
+	mg := database.NewMgo("cssbattle")
+	filter := bson.D{{"imgid", id}}
+	cur, err := database.FindAll(mg, "score", 10, -1, filter)
 	if err != nil {
 		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
 	} else {

@@ -19,6 +19,8 @@ type CompareImgInfo struct {
 	Scale float32 `json:"scale"`
 }
 type UserImg struct {
+	UserId   string  `json:"userId"`
+	ImgId    string  `json:"imgId"`
 	UserName string  `json:"userName"`
 	UserIcon string  `json:"userIcon"`
 	Score    float32 `json:"score"`

@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-07 21:50:26
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-10 12:20:01
+ * @LastEditTime: 2022-02-07 09:18:23
  */
 package auth
 
@@ -26,7 +26,6 @@ func Auth() gin.HandlerFunc {
 		Token := c.GetHeader("Token")
 		fmt.Println("Token", Token)
 		if Token != "" {
-			fmt.Println("sdsdsd")
 			appG := app.Gin{C: c}
 			filter := bson.D{{"token", Token}}
 			mg := database.NewMgo("token")

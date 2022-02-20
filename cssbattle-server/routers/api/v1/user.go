@@ -41,10 +41,12 @@ func Login(c *gin.Context) {
 	if err == mongo.ErrNoDocuments {
 		appG.Response(http.StatusInternalServerError, e.ERROR_LOGIN, map[string]interface{}{})
 	} else {
+		maxAge := 60 * 60 * 24 * 7
+		// maxAge := 60
 		mg := database.NewMgo("token")
 		var tokenInfo InterfaceEntity.TokenInfo
 		tokenInfo.Token = token
-		tokenInfo.ExpireDate = time.Now()
+		tokenInfo.ExpireDate = time.Now().Add(time.Duration(maxAge) * time.Second)
 		_, err := database.InsertOne(mg, tokenInfo)
 		if err != nil {
 			appG.Response(http.StatusInternalServerError, e.ERROR_LOGIN, map[string]interface{}{})
@@ -78,7 +80,7 @@ func GetUser(c *gin.Context) {
 	} else {
 		user, err := jwt.ParseToken(tokenInfo.Token)
 		if err != nil {
-			appG.Response(http.StatusInternalServerError, e.ERROR, nil)
+			appG.Response(http.StatusUnauthorized, e.INVALID_AUTH, nil)
 		} else {
 			appG.Response(http.StatusOK, e.SUCCESS, user)
 		}
@@ -137,7 +139,8 @@ func Register(c *gin.Context) {
 func Sort(c *gin.Context) {
 	appG := app.Gin{C: c}
 	mg := database.NewMgo("user")
-	cur, err := database.FindAll(mg, "score", 10, -1)
+	filter := bson.D{}
+	cur, err := database.FindAll(mg, "score", 10, -1, filter)
 	if err != nil {
 		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
 	} else {

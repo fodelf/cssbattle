@@ -6,6 +6,10 @@ class IM {
   public userId;
   private roomId;
   private joinUrl = 'cssbattle.wuwenzhou.com.cn:9529';
+  private baseUrl =
+    process.env.NODE_ENV === 'development'
+      ? ''
+      : 'https://cssbattle.wuwenzhou.com.cn:9529';
   private Socket: any;
   private callbackList: any = [];
   constructor(options: IMOptions) {
@@ -13,8 +17,7 @@ class IM {
     this.roomId = options.roomId;
   }
   public async init() {
-    const url = `https://cssbattle.wuwenzhou.com.cn:9529/api/v1/im/join`;
-    // const url = `http://127.0.0.1:9528/api/v1/im/join`;
+    const url = `${this.baseUrl}/api/v1/im/join`;
     const data = {
       userId: this.userId,
       roomId: this.roomId,
@@ -53,7 +56,11 @@ class IM {
   }
   private initSocket() {
     return new Promise((resolve, reject) => {
-      const url = `wss://cssbattle.wuwenzhou.com.cn:9529/api/v1/im/message?roomId=${this.roomId}&userId=${this.userId}`;
+      const baseUrl =
+        process.env.NODE_ENV === 'development'
+          ? 'ws://127.0.0.1:9528'
+          : 'wss://cssbattle.wuwenzhou.com.cn:9529';
+      const url = `${baseUrl}/api/v1/im/message?roomId=${this.roomId}&userId=${this.userId}`;
       // const url = `ws://127.0.0.1:9528/api/v1/im/message?roomId=${this.roomId}&userId=${this.userId}`;
       this.Socket = new WebSocket(url);
       this.Socket.onopen = function () {
@@ -61,7 +68,7 @@ class IM {
         resolve('ok');
       };
       this.Socket.onerror = function () {
-        console.log('链接失败');
+        console.warn('链接失败');
         reject('error');
       };
     });

@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-08-27 15:03:49
  * @LastEditors: 吴文周
- * @LastEditTime: 2021-10-23 20:09:43
+ * @LastEditTime: 2022-02-16 22:17:28
  */
 package database
 
@@ -85,7 +85,7 @@ func FindOne(m Mgo, filter interface{}) *mongo.SingleResult {
 	cxt, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	cur := m.collection.FindOne(cxt, filter)
-	fmt.Println(cur)
+	fmt.Println("FindOne", cur)
 	return cur
 }
 
@@ -99,12 +99,10 @@ func Count(m Mgo) int64 {
 // Skip 跳过
 // Limit 读取数量
 // Sort  排序   1 倒叙 ， -1 正序
-func FindAll(m Mgo, key string, Limit int64, sort int) (cur *mongo.Cursor, err error) {
+func FindAll(m Mgo, key string, Limit int64, sort int, filter interface{}) (cur *mongo.Cursor, err error) {
 	SORT := bson.D{{key, sort}}
 	_, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	filter := bson.D{}
-
 	//where
 	findOptions := options.Find()
 	findOptions.SetSort(SORT)
@@ -134,7 +132,7 @@ func QueryAll(m Mgo, key string, Limit int64, sort int, filter interface{}) (cur
 // Skip 跳过
 // Limit 读取数量
 // Sort  排序   1 倒叙 ， -1 正序
-func FindSort(m Mgo, key string, count int) (scale float32, err error) {
+func FindSort(m Mgo, key string, count int, filter interface{}) (scale float32, err error) {
 	size, _ := m.collection.EstimatedDocumentCount(context.TODO())
 	if size == 0 {
 		return 1.0, err
@@ -142,7 +140,6 @@ func FindSort(m Mgo, key string, count int) (scale float32, err error) {
 		SORT := bson.D{{key, 1}}
 		_, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
-		filter := bson.D{}
 		//where
 		findOptions := options.Find()
 		findOptions.SetSort(SORT)
