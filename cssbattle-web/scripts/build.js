@@ -1,3 +1,11 @@
+/*
+ * @Description: 描述
+ * @Author: 吴文周
+ * @Github: https://github.com/fodelf
+ * @Date: 2021-10-19 15:06:28
+ * @LastEditors: 吴文周
+ * @LastEditTime: 2022-03-12 11:03:04
+ */
 const fs = require('fs');
 const chalk = require('chalk');
 const path = require('path');
@@ -31,7 +39,14 @@ async function buildDocker() {
   } catch (error) {
     console.error(error);
   }
-  await run('docker', ['build', '-t', 'fodelf/cssbattleweb', '.']);
+  await run('docker', [
+    'build',
+    '-t',
+    'fodelf/cssbattleweb',
+    '--platform',
+    'linux/amd64',
+    '.',
+  ]);
   await run('docker', ['push', 'fodelf/cssbattleweb']);
 }
 
