@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-10-02 10:36:35
  * @LastEditors: 吴文周
- * @LastEditTime: 2022-02-16 22:10:10
+ * @LastEditTime: 2022-03-05 23:41:39
  */
 package router
 
@@ -211,7 +211,6 @@ func sendproc(node *Node) {
 		}
 	}()
 	defer func() {
-		delete(clientMap, node.UserId)
 		node.Conn.Close()
 		fmt.Println("Client发送数据 defer")
 	}()
@@ -225,8 +224,6 @@ func sendproc(node *Node) {
 				log.Println(err.Error())
 				return
 			}
-			fmt.Println("msg.UserId", msg.UserId)
-			fmt.Println("node.UserId", node.UserId)
 			// if msg.UserId != node.UserId {
 			err = node.Conn.WriteMessage(websocket.TextMessage, data)
 			if err != nil {

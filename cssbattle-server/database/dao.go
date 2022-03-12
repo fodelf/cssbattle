@@ -4,7 +4,7 @@
  * @Author: 吴文周
  * @Date: 2021-08-27 15:03:49
  * @LastEditors: 吴文周
- * @LastEditTime: 2022-02-16 22:17:28
+ * @LastEditTime: 2022-03-12 10:21:38
  */
 package database
 
@@ -85,7 +85,7 @@ func FindOne(m Mgo, filter interface{}) *mongo.SingleResult {
 	cxt, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	cur := m.collection.FindOne(cxt, filter)
-	fmt.Println("FindOne", cur)
+	// fmt.Println("FindOne", cur)
 	return cur
 }
 

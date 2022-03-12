@@ -3,8 +3,8 @@
  * @version:
  * @Author: pym
  * @Date: 2021-08-28 11:49:43
- * @LastEditors: pym
- * @LastEditTime: 2021-10-27 00:36:13
+ * @LastEditors: 吴文周
+ * @LastEditTime: 2022-02-20 21:17:44
  */
 import React, { useCallback, useState, useRef, useEffect } from 'react';
 import styles from './index.less';
@@ -474,7 +474,7 @@ const AuditionGrade = (props: any) => {
 
 const Audition: React.FC = (props: any) => {
   const [codeValue, setValue] = useState(
-    '<div>\n  <div></div>\n</div>\n\n<style>\n  div {\n    width: 100px;\n    height: 100px;\n    background: #dd6b4d;\n  }\n</style>',
+    '<div>\n  <div></div>\n</div>\n\n<style> \n  * {\n    margin: 0px;\n   }\n  div {\n    width: 100px;\n    height: 100px;\n    background: #dd6b4d;\n  }\n</style>',
   );
   const [showCodeValue, setCodeValue] = useState('');
   const [checkType, setType] = useState('iframe');
@@ -927,10 +927,10 @@ const Audition: React.FC = (props: any) => {
     }).then((res) => {
       if (res.data.data.code === '') {
         setCodeValue(
-          `<div>\n  <div></div>\n</div>\n\n<style>\n  div {\n    width: 100px;\n    height: 100px;\n    background: #dd6b4d;\n  }\n</style>\n\n<!-- 在此编辑器中编写 HTML/CSS 并以尽可能少的代码复制给定的目标图像。\n 你在这里写的，按原样呈现 -->\n\n<!-- 得分 -->\n<!-- 分数是根据您使用的字符数（此评论包括：P）以及复制图像的接近程度计算得出的。 \n阅读常见问题解答 (https://cssbattle.dev/faqs) 了解更多信息。 -->\n<!-- 总结：匹配度越高，使用字符数越少得分越高--> \n\n<!-- 重要提示：提交前删除此段提示信息-->`,
+          `<div>\n  <div></div>\n</div>\n\n<style>\n * {\n    margin: 0px;\n   } \n div {\n    width: 100px;\n    height: 100px;\n    background: #dd6b4d;\n  }\n</style>\n\n<!-- 在此编辑器中编写 HTML/CSS 并以尽可能少的代码复制给定的目标图像。\n 你在这里写的，按原样呈现 -->\n\n<!-- 得分 -->\n<!-- 分数是根据您使用的字符数（此评论包括：P）以及复制图像的接近程度计算得出的。 \n阅读常见问题解答 (https://cssbattle.dev/faqs) 了解更多信息。 -->\n<!-- 总结：匹配度越高，使用字符数越少得分越高--> \n\n<!-- 重要提示：提交前删除此段提示信息-->`,
         );
         setValue(
-          `<div>\n  <div></div>\n</div>\n\n<style>\n  div {\n    width: 100px;\n    height: 100px;\n    background: #dd6b4d;\n  }\n</style>\n\n<!-- 在此编辑器中编写 HTML/CSS 并以尽可能少的代码复制给定的目标图像。\n 你在这里写的，按原样呈现 -->\n\n<!-- 得分 -->\n<!-- 分数是根据您使用的字符数（此评论包括：P）以及复制图像的接近程度计算得出的。 \n阅读常见问题解答 (https://cssbattle.dev/faqs) 了解更多信息。 -->\n<!-- 总结：匹配度越高，使用字符数越少得分越高--> \n\n<!-- 重要提示：提交前删除此段提示信息-->`,
+          `<div>\n  <div></div>\n</div>\n\n<style>\n * {\n    margin: 0px;\n   }\n  div {\n    width: 100px;\n    height: 100px;\n    background: #dd6b4d;\n  }\n</style>\n\n<!-- 在此编辑器中编写 HTML/CSS 并以尽可能少的代码复制给定的目标图像。\n 你在这里写的，按原样呈现 -->\n\n<!-- 得分 -->\n<!-- 分数是根据您使用的字符数（此评论包括：P）以及复制图像的接近程度计算得出的。 \n阅读常见问题解答 (https://cssbattle.dev/faqs) 了解更多信息。 -->\n<!-- 总结：匹配度越高，使用字符数越少得分越高--> \n\n<!-- 重要提示：提交前删除此段提示信息-->`,
         );
       } else {
         setCodeValue(res.data.data.code);

@@ -4,7 +4,7 @@
  * @Author: pym
  * @Date: 2021-08-28 11:39:09
  * @LastEditors: 吴文周
- * @LastEditTime: 2022-02-16 21:57:25
+ * @LastEditTime: 2022-02-20 21:24:27
  */
 import { defineConfig } from 'umi';
 import routes from './src/router/index';
@@ -12,6 +12,7 @@ import routes from './src/router/index';
 export default defineConfig({
   // favicon: '/favicon.ico',
   headScripts: [
+    process.env.NODE_ENV === 'development'?"":
     `var _hmt = _hmt || [];
   (function() {
     var hm = document.createElement("script");
@@ -22,7 +23,7 @@ export default defineConfig({
     {
       src:
         process.env.NODE_ENV === 'production'
-          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.44/lsp.js'
+          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.45/lsp.js'
           : '/lsp.js',
     },
   ],
@@ -31,7 +32,7 @@ export default defineConfig({
       rel: 'icon',
       href:
         process.env.NODE_ENV === 'production'
-          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.44/favicon.ico'
+          ? 'https://cdn.wuwenzhou.com.cn/web/0.0.45/favicon.ico'
           : '/favicon.ico',
     },
   ],
@@ -42,14 +43,14 @@ export default defineConfig({
   fastRefresh: {},
   publicPath:
     process.env.NODE_ENV === 'production'
-      ? 'https://cdn.wuwenzhou.com.cn/web/0.0.44/'
+      ? 'https://cdn.wuwenzhou.com.cn/web/0.0.45/'
       : '/',
   proxy: {
-    '/api/v1/im': {
-      target: 'http://127.0.0.1:9528/', //代理的地址
-      // pathRewrite: { '^/api': '' },
-      changeOrigin: true,
-    },
+    // '/api/v1/im': {
+    //   target: 'http://127.0.0.1:9528/', //代理的地址
+    //   // pathRewrite: { '^/api': '' },
+    //   changeOrigin: true,
+    // },
     '/api': {
       target: 'http://127.0.0.1:9527/', //代理的地址
       // pathRewrite: { '^/api': '' },
@@ -58,8 +59,8 @@ export default defineConfig({
   },
   // devServer: {
   //   https: {
-  //     key: './Nginx/2_cssbattle.wuwenzhou.com.cn/web/0.0.44/',
-  //     cert: './Nginx/1_cssbattle.wuwenzhou.com.cn/web/0.0.44/',
+  //     key: './Nginx/2_cssbattle.wuwenzhou.com.cn/web/0.0.45/',
+  //     cert: './Nginx/1_cssbattle.wuwenzhou.com.cn/web/0.0.45/',
   //   },
   // },
 });

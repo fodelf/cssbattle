@@ -1,3 +1,11 @@
+/*
+ * @Description: 描述
+ * @Author: 吴文周
+ * @Github: https://github.com/fodelf
+ * @Date: 2021-10-23 17:19:16
+ * @LastEditors: 吴文周
+ * @LastEditTime: 2022-02-20 21:10:22
+ */
 type IMOptions = {
   userId: string;
   roomId: string;
@@ -8,7 +16,7 @@ class IM {
   private joinUrl = 'cssbattle.wuwenzhou.com.cn:9529';
   private baseUrl =
     process.env.NODE_ENV === 'development'
-      ? ''
+      ? 'http://127.0.0.1:9528'
       : 'https://cssbattle.wuwenzhou.com.cn:9529';
   private Socket: any;
   private callbackList: any = [];
